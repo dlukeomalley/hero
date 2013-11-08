@@ -1,0 +1,4 @@
+<launch>
+  <node name="capsense_poller" pkg="hero" type="capsense_poller.py" />
+  <node name="basic_touch_interpreter" pkg="hero" type="basic_touch_interpreter.py" />
+</launch>
