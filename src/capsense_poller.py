@@ -6,7 +6,7 @@ import rospy
 from hero.msg import CapSense
 
 def poller():
-    pub = rospy.Publisher('capsense_values', CapSense)
+    pub = rospy.Publisher('capsense_state', CapSense)
     rospy.init_node('capsense_poller', anonymous=True)
 
     # set polling rate in Hz
