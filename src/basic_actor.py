@@ -9,15 +9,21 @@ class Actor():
     def __init__(self):
         rospy.Subscriber("abstract_action", Action, self.callback)
 
+        self.valid_action = {"HUG": self.hug,
+                             "BLINK": self.blink}
+
     def callback(self, action):
-        if action.type == "HUG":
-            self.hug()
+        if action.type in self.valid_action:
+            self.valid_action[action.type]()
             
     def hug(self):
-        self.log("HUG")
+        self.log("hugging")
+
+    def blink(self):
+        self.log("blinking")
 
     def log(self, action):
-        rospy.loginfo("Acting: {}".format(action))
+        rospy.loginfo("Action: {}".format(action))
         
 
 if __name__ == '__main__':

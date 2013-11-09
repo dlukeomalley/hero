@@ -15,7 +15,9 @@ def poller():
     while not rospy.is_shutdown():
         # read MP121
         # log capsense values
-        rospy.loginfo("Capsense Reading: Spoofed")
+        sensor_values = [False]*12
+
+        rospy.loginfo("Capsense Reading: {}".format(sensor_values))
         # Publish readings to capsense_values topic
         pub.publish(CapSense([False]*12))
         r.sleep()

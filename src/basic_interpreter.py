@@ -17,15 +17,14 @@ class Interpreter():
         self.sensor = data.sensor
         rospy.loginfo("Read: {}".format(self.sensor))
 
-        self.publish(self.interpret())
+        # TODO: Actually interpret sensor values
+        for val in self.sensor:
+            if val:
+                self.publish("HUG")
+                break
 
     def publish(self, abstract_action):
         self.pub.publish(abstract_action)
-
-    def interpret(self):
-        # TODO: Actually interpret sensor values
-        action = "HUG"
-        return action
 
 if __name__ == '__main__':
     rospy.init_node('basic_interpreter', anonymous=True)
