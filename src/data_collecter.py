@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
-from external import mpr121
-from Adafruit_PWM_Servo_Driver import PWM
+import mpr121
 import time
 
 CAPSENSE_IRQ_PIN = 8

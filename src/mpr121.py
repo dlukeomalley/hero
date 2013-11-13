@@ -1,6 +1,8 @@
 # Based on Arduino example by Jim Lindblom
 # http://bildr.org/2011/05/mpr121_arduino/
 
+# Modified by Luke O'Malley to follow MPR121 AN3944
+
 import smbus
 bus = smbus.SMBus(1)
 
@@ -10,7 +12,7 @@ NHD_R = 0x2C
 NCL_R = 0x2D
 FDL_R = 0x2E
 MHD_F = 0x2F
-NHD_F = 0x30
+NHD_F = 0x30x
 NCL_F = 0x31
 FDL_F = 0x32
 ELE0_T = 0x41
@@ -64,7 +66,6 @@ def readData(address):
 	return (MSB << 8) | LSB
 
 def setup(address):
-
 	bus.write_byte_data(address, ELE_CFG, 0x00)
 
 	# Section A - Controls filtering when data is > baseline.
@@ -120,13 +121,20 @@ def setup(address):
 	bus.write_byte_data(address, ELE11_R, REL_THRESH)	
 
 	# Section D
-	# Set the Filter Configuration
+	# Set the number of samples averaged. 1 sample/ms
 	# Set ESI2
 
 	bus.write_byte_data(address, FIL_CFG, 0x04)
+
+	# Section F
+	# Auto-Configuration
+	bus.write_byte_data(address, ATO_CFG0, 0x0B)
+	bus.write_byte_data(address, ATO_CFGU, 0x9C)
+	bus.write_byte_data(address, ATO_CFGL, 0x65)
+	bus.write_byte_data(address, ATO_CFGT, 0x8C)
 
 	# Section E
 	# Electrode Configuration
 	# Set ELE_CFG to 0x00 to return to standby mode
 
-	bus.write_byte_data(address, ELE_CFG, 0x0C)  # Enables all 12 Electrodes	
+	bus.write_byte_data(address, ELE_CFG, 0x0C)  # Enables all 12 Electrodes
