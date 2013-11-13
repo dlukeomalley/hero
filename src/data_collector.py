@@ -11,8 +11,8 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(CAPSENSE_IRQ_PIN, GPIO.IN)
 
 # Initialize MP121 capacitive touch board
-mpr121.TOU_THRESH = 0x30
-mpr121.REL_THRESH = 0x30
+mpr121.TOU_THRESH = 0x0F
+mpr121.REL_THRESH = 0x0A
 mpr121.setup(MPR121_ADDR)
 
 # Loop
