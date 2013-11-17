@@ -15,7 +15,7 @@ def blink():
         rospy.loginfo("Blink Generator: BLINK")
 
         # randomly blink once after a time between A, B seconds
-        rospy.sleep(random.randint(5, 20))
+        rospy.sleep(random.randint(20, 40))
         
 if __name__ == '__main__':
     try:
