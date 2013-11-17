@@ -13,6 +13,8 @@ class Actor():
                              "BLINK": self.blink}
 
     def callback(self, action):
+        rospy.loginfo("Basic Actor Read: {}".format(action))
+
         if action.type in self.valid_action:
             self.valid_action[action.type]()
             

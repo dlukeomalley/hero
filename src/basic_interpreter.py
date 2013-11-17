@@ -7,7 +7,12 @@ from hero.msg import CapSense, Action
 import pdb
 
 data = {(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): None,
-        (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0): "BELLY_RUB"}
+        (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY UPPER",
+        (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY LOWER",
+        (0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0): "LEFT ARM",
+        (0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0): "RIGHT ARM",
+        (0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0): "FRONT HEAD",
+        (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0): "BACK HEAD"}
     
 
 class Interpreter():
