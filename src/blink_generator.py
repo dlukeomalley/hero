@@ -12,6 +12,8 @@ def blink():
 
     while not rospy.is_shutdown():
         pub.publish("BLINK")
+        rospy.loginfo("Blink Generator: BLINK")
+
         # randomly blink once after a time between A, B seconds
         rospy.sleep(random.randint(5, 20))
         

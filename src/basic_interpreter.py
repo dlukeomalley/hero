@@ -21,7 +21,7 @@ class Interpreter():
         pdb.set_trace()
         sensor = data.sensor
 
-        rospy.loginfo("Read: {}".format(sensor))
+        rospy.loginfo("Basic Interpreter Read: {}".format(sensor))
 
         distances = [(action, euclidean_distance(sensor, sample)) for sample, action in data.iteritems()]
         distances = sorted(distances, key=lambda x: entry[1])

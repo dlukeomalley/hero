@@ -23,7 +23,7 @@ class Actor():
         self.log("blinking")
 
     def log(self, action):
-        rospy.loginfo("Action: {}".format(action))
+        rospy.loginfo("Basic Actor Acting: {}".format(action))
         
 
 if __name__ == '__main__':
