@@ -9,7 +9,7 @@ class Actor():
     def __init__(self):
         rospy.Subscriber("abstract_action", Action, self.callback)
 
-        self.valid_action = {"HUG": self.hug,
+        self.valid_action = {"BELLY_RUB": self.hug,
                              "BLINK": self.blink}
 
     def callback(self, action):
