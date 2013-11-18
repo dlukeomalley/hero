@@ -5,7 +5,7 @@ import roslib; roslib.load_manifest('hero')
 import rospy
 from hero.msg import Action
 
-valid_input = { 'h': 'HUG',
+valid_input = { 'h': 'BELLY_UPPER',
                 'b': 'BLINK'}
 
 def poller():

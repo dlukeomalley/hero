@@ -18,6 +18,7 @@ ARM_SPEED = .2
 ARM_CURLED = .2 #how far the arm closes (you probably shouldn't mess with this)
 
 PUR_M = (8,9)
+PUR_SPEED = .7
 HEAD_SERVO = 10
 
 ####################################################################
@@ -36,14 +37,14 @@ def stop_motor(motor):
 ##                             SPINE
 ####################################################################
 
-def spine_curl():
+def tail_curl():
     set_motor(TAIL_M, TAIL_SPEED)
-    time.sleep(SPINE_CURLED/SPINE_SPEED)
+    time.sleep(TAIL_CURLED/TAIL_SPEED)
     stop_motor(TAIL_M)
 
-def spine_uncurl():
+def tail_uncurl():
     set_motor(TAIL_M, -TAIL_SPEED)
-    time.sleep(SPINE_CURLED/SPINE_SPEED)
+    time.sleep(TAIL_CURLED/TAIL_SPEED)
     stop_motor(TAIL_M)
 
 
@@ -69,22 +70,22 @@ def eyes_open():
 def left_arm_close():
     set_motor(LEFT_ARM_M, ARM_SPEED)
     time.sleep(ARM_CURLED/ARM_SPEED)
-    set_motor(LEFT_ARM_M)
+    stop_motor(LEFT_ARM_M)
 
 def left_arm_open():
     set_motor(LEFT_ARM_M, -ARM_SPEED)
     time.sleep(ARM_CURLED/ARM_SPEED)
-    set_motor(LEFT_ARM_M)
+    stop_motor(LEFT_ARM_M)
 
 def right_arm_close():
     set_motor(RIGHT_ARM_M, ARM_SPEED)
     time.sleep(ARM_CURLED/ARM_SPEED)
-    set_motor(RIGHT_ARM_M)
+    stop_motor(RIGHT_ARM_M)
 
 def right_arm_open():
     set_motor(RIGHT_ARM_M, -ARM_SPEED)
     time.sleep(ARM_CURLED/ARM_SPEED)
-    set_motor(RIGHT_ARM_M)
+    stop_motor(RIGHT_ARM_M)
 
 def arms_open():
     left_arm_open()
@@ -101,7 +102,7 @@ def arms_close():
 def headtilt(angle):
     # TODO: map correctly
     angle += 90
-    servo_driver.setServoPosition(HEAD, angle)
+    servo_driver.setServoPosition(HEAD_SERVO, angle)
 
 
 ####################################################################
@@ -134,15 +135,15 @@ def wave(arm):
 
 def headshake():
     headtilt(-20)
-    time.sleep()
+    time.sleep(.25)
     headtilt(20)
-    time.sleep()
+    time.sleep(.25)
     headtilt(0)
 
 def pur():
     set_motor(PUR_M, PUR_SPEED)
     time.sleep(random.uniform(0.5, 1.5))
-    stop_motor()
+    stop_motor(PUR_M)
 
 # Basic "unit" tests
 # blink()

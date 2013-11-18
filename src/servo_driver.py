@@ -7,9 +7,9 @@ import RPi.GPIO as GPIO
 # all motors on and off at once.  The A and B pins are 
 # used to move the motor clockwise, counter clockwise,
 # or stationary.
-GPIO.setmode(GPIO.BCM)
-enablePin = 22
-GPIO.setup(enablePin, GPIO.OUT)
+# GPIO.setmode(GPIO.BCM)
+# enablePin = 22
+# GPIO.setup(enablePin, GPIO.OUT)
 
 # Initialise the PWM device using the default address
 pwm = PWM(0x40, debug=True)
@@ -36,14 +36,14 @@ def setServoPosition(channel, position):
 
 # Turns all of the motors on, though they have a starting speed
 # of zero. This method must be called at the top of any program.
-def motorsOn():
-  GPIO.output(enablePin, True)
+# def motorsOn():
+#   GPIO.output(enablePin, True)
 
-# Turns all of the motors off. Use this to save power or end
-# a program.  To turn an individual motor off, set its speed to
-# zero.
-def motorsOff():
-  GPIO.output(enablePin, False)
+# # Turns all of the motors off. Use this to save power or end
+# # a program.  To turn an individual motor off, set its speed to
+# # zero.
+# def motorsOff():
+#   GPIO.output(enablePin, False)
 
 # Motors take up two channels on the adafruit PWM board. The
 # speed variable should be -1 for counter clockwise and 1 for 
@@ -55,10 +55,8 @@ def setMotorSpeed(channelA, channelB, speed):
     speed = -1
   pulse = int(abs(speed)*4095)
   if speed < 0:
-    print(pulse)
     pwm.setPWM(channelA, 0, pulse)
     pwm.setPWM(channelB, 0, 0)
   else:
-    #print(pulse)
     pwm.setPWM(channelA, 0, 0)
     pwm.setPWM(channelB, 0, pulse)

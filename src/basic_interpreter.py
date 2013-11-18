@@ -22,10 +22,9 @@ class Interpreter():
         rospy.Subscriber("capsense_state", CapSense, self.callback)
 
     def callback(self, data):
-        pdb.set_trace()
         sensor = data.sensor
 
-        rospy.loginfo("Basic Interpreter Read: {}".format(sensor))
+        #rospy.loginfo("Basic Interpreter Read: {}".format(sensor))
 
         distances = [(action, self.euclidean_distance(sensor, sample)) for sample, action in data_set.iteritems()]
         distances = sorted(distances, key=lambda pair: pair[1])
@@ -33,6 +32,7 @@ class Interpreter():
         action, val = distances[0]
 
         if action:
+            rospy.loginfo("OUTPUT: {}".format(action))
             self.publish(action)
 
     def publish(self, abstract_action):

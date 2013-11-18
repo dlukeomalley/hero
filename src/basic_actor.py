@@ -6,10 +6,8 @@ import actions as output
 import rospy
 from hero.msg import Action
     
-class Actor():
+class Actor:
     def __init__(self):
-        rospy.Subscriber("abstract_action", Action, self.callback)
-
         self.action_map =  {"BELLY UPPER" : output.hug(),
                             "BELLY LOWER": output.hug(),
                             "LEFT ARM": output.wave("LEFT"),
@@ -19,10 +17,18 @@ class Actor():
                             "BLINK": output.blink(),
                             "PUR": output.pur()}
 
+        rospy.Subscriber("abstract_action", Action, self.callback)
+
     def callback(self, data):
-        if data.type in self.actions_map:
+        import pdb
+        pdb.set_trace()
+
+
+
+
+        if data.type in self.action_map:
             rospy.loginfo("Basic Actor Acting: {}".format(data))
-            self.actions[data.type]()
+            self.action_map[data.type]()
 
 if __name__ == '__main__':
     rospy.init_node('basic_actor', anonymous=True)

@@ -8,6 +8,7 @@ import RPi.GPIO as GPIO
 import mpr121
 import time
 
+MPR121_IRQ = 17
 NUM_TOUCH_PADS = 12
 MPR121_ADDR = 0x5a
 
@@ -17,7 +18,8 @@ def poller():
     rospy.init_node('capsense_poller', anonymous=True)
 
     # Initialize GPIO Pin numbering and I/O
-    GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BCM)
+    #GPIO.setup(MPR121_IRQ, GPIO.IN)
 
     # Initialize MP121 capacitive touch board
     mpr121.TOU_THRESH = 0x15
@@ -25,13 +27,12 @@ def poller():
     mpr121.setup(MPR121_ADDR)
 
     # set polling rate in Hz
-    r = rospy.Rate(10)
+    r = rospy.Rate(4)
     
     while not rospy.is_shutdown():
-        IRQ = True
-        
-        # if IRQ is active
-        if IRQ:
+        # if IRQ is active low
+        #if not GPIO.input(MPR121_IRQ):
+        if True:
             sensor_values = [False] * NUM_TOUCH_PADS
             touch_data = mpr121.readData(MPR121_ADDR)
 
@@ -41,6 +42,7 @@ def poller():
 
             # Publish readings to capsense_values topic
             pub.publish(sensor_values)
+            rospy.loginfo(sensor_values)
 
         r.sleep()
         
