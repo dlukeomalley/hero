@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import roslib; roslib.load_manifest('hero')
+import actions as output
 
 import rospy
 from hero.msg import Action
@@ -9,24 +10,19 @@ class Actor():
     def __init__(self):
         rospy.Subscriber("abstract_action", Action, self.callback)
 
-        self.valid_action = {"BELLY_RUB": self.hug,
-                             "BLINK": self.blink}
+        self.action_map =  {"BELLY UPPER" : output.hug(),
+                            "BELLY LOWER": output.hug(),
+                            "LEFT ARM": output.wave("LEFT"),
+                            "RIGHT ARM": output.wave("RIGHT"),
+                            "FRONT HEAD": output.headshake(),
+                            "BACK HEAD": output.none(),
+                            "BLINK": output.blink(),
+                            "PUR": output.pur()}
 
-    def callback(self, action):
-        rospy.loginfo("Basic Actor Read: {}".format(action))
-
-        if action.type in self.valid_action:
-            self.valid_action[action.type]()
-            
-    def hug(self):
-        self.log("hugging")
-
-    def blink(self):
-        self.log("blinking")
-
-    def log(self, action):
-        rospy.loginfo("Basic Actor Acting: {}".format(action))
-        
+    def callback(self, data):
+        if data.type in self.actions_map:
+            rospy.loginfo("Basic Actor Acting: {}".format(data))
+            self.actions[data.type]()
 
 if __name__ == '__main__':
     rospy.init_node('basic_actor', anonymous=True)
