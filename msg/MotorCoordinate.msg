@@ -1,2 +1,2 @@
-int32 name
+string name
 int32 position

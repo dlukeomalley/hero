@@ -22,7 +22,8 @@ def poll():
         # code to read from analog and send out to chip goes here
         voltages = MCP3008.read_all()
         for i, name in pin_map.iteritems():
-            pub.publish({'name': name, 'position': voltages[i]})
+            pub.publish(MotorCoordinate(name, voltages[i]))
+            rospy.loginfo('{}: {}'.format(name, voltages[i]))
 
         r.sleep()
         

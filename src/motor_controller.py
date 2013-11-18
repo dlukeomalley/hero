@@ -60,7 +60,7 @@ class Motor:
             self.move_to(self.goal)
 
     def stop(self):
-        rospy.loginfo("INFO: stopping motor {}".format(self.name)
+        rospy.loginfo("INFO: stopping motor {}".format(self.name))
         servo.setMotorSpeed(self.pos, self.neg, 0)
 
 if __name__ == '__main__':
