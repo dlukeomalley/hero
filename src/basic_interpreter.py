@@ -7,19 +7,19 @@ from hero.msg import CapSense, Action
 import pdb
 
 data_set = {(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): None,
-        (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY UPPER",
-        (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY LOWER",
-        (0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0): "LEFT ARM",
-        (0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0): "RIGHT ARM",
-        (0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0): "FRONT HEAD",
-        (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0): "BACK HEAD"}
+            (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY UPPER",
+            (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY LOWER",
+            (0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0): "LEFT ARM",
+            (0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0): "RIGHT ARM",
+            (0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0): "FRONT HEAD",
+            (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0): "BACK HEAD"}
 
 class Interpreter():
     def __init__(self):
         # initialize sensor value to 0
 
         self.pub = rospy.Publisher("abstract_action", Action)
-        rospy.Subscriber("capsense_state", CapSense, self.callback)
+        rospy.Subscriber("capsense_state", CapSense, self.callback, queue_size=2)
 
     def callback(self, data):
         sensor = data.sensor

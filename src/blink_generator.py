@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import roslib; roslib.load_manifest('hero')
 
 import rospy
@@ -14,8 +15,12 @@ def blink():
         pub.publish("BLINK")
         rospy.loginfo("Blink Generator: BLINK")
 
+        if random.randint(0,1):
+            time.sleep(.25)
+            pub.publish("BLINK")
+
         # randomly blink once after a time between A, B seconds
-        rospy.sleep(random.randint(20, 40))
+        rospy.sleep(random.randint(10, 20))
         
 if __name__ == '__main__':
     try:

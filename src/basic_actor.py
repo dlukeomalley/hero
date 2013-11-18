@@ -8,24 +8,25 @@ from hero.msg import Action
     
 class Actor:
     def __init__(self):
-        self.action_map =  {"BELLY UPPER" : output.hug(),
-                            "BELLY LOWER": output.hug(),
-                            "LEFT ARM": output.wave("LEFT"),
-                            "RIGHT ARM": output.wave("RIGHT"),
-                            "FRONT HEAD": output.headshake(),
-                            "BACK HEAD": output.none(),
-                            "BLINK": output.blink(),
-                            "PUR": output.pur()}
+        output.stop_all()
 
-        rospy.Subscriber("abstract_action", Action, self.callback)
+        self.action_map =  {"BELLY UPPER" : output.hug,
+                            "BELLY LOWER": output.tail_wag,
+                            "LEFT ARM": output.left_hand_grab,
+                            "RIGHT ARM": output.right_hand_grab,
+                            "FRONT HEAD": output.headshake,
+                            "BACK HEAD": output.none,
+                            "BLINK": output.blink,
+                            "PUR": output.pur,
+                            "TEST": output.test,
+                            "LEFT WAVE": output.left_wave,
+                            "RIGHT WAVE": output.right_wave}
+
+        rospy.Subscriber("abstract_action", Action, self.callback, queue_size=2)
+        rospy.on_shutdown(output.stop_all)
+
 
     def callback(self, data):
-        import pdb
-        pdb.set_trace()
-
-
-
-
         if data.type in self.action_map:
             rospy.loginfo("Basic Actor Acting: {}".format(data))
             self.action_map[data.type]()

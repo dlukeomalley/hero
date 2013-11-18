@@ -28,17 +28,20 @@ def poller():
 
     # set polling rate in Hz
     r = rospy.Rate(4)
+    old_touch_data = 0
     
     while not rospy.is_shutdown():
-        # if IRQ is active low
-        #if not GPIO.input(MPR121_IRQ):
-        if True:
+        touch_data = mpr121.readData(MPR121_ADDR)
+        touch_data &= 0b111111
+
+        if not touch_data == old_touch_data:
             sensor_values = [False] * NUM_TOUCH_PADS
-            touch_data = mpr121.readData(MPR121_ADDR)
 
             for i in range(NUM_TOUCH_PADS):
                 if touch_data & (1 << i):
                     sensor_values[i] = True
+
+            old_touch_data = touch_data
 
             # Publish readings to capsense_values topic
             pub.publish(sensor_values)

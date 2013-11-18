@@ -55,8 +55,8 @@ ATO_CFGL = 0x7E
 ATO_CFGT = 0x7F
 
 # Global Constants
-TOU_THRESH = 0x06
-REL_THRESH = 0x0A
+TOU_THRESH = 0x02
+REL_THRESH = 0x03
 
 # Routines
 def readData(address):
