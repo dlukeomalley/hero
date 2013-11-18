@@ -13,18 +13,19 @@ from hero.msg import MotorCoordinate
 class Motor:
     # TODO: Include max_voltage so that avg voltage from PWM doesn't exceed ratings of motor
     def __init__(self): 
-        import pdb; pdb.set_trace()
-        
-        rospy.init_node("motor_node".format(self.name.lower(), anonymous=True))
+        rospy.init_node("motor_node", anonymous=True)
         rospy.Subscriber("goals", MotorCoordinate, self.goal_callback)
         rospy.Subscriber("locations", MotorCoordinate, self.update)
         rospy.on_shutdown(self.stop)
 
-        self.name = rospy.get_name().split(/)[-1].upper()
-        self.pos, self.neg = rospy.get_param("pins")
-        self.low, self.high = rospy.get_param("limits")
-        # defaults to 5 if not found
-        self.threshold = rospy.get_param('threshold', 5)
+        import pdb
+        pdb.set_trace()
+
+        self.name = rospy.get_name().split('/')[-1]
+        params = rospy.get_param(self.name)
+        self.pos, self.neg = params['pins']
+        self.low, self.high = params['limits']
+        self.threshold = params['threshold']
 
         print "Name: {}".format(self.name)
         
