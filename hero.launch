@@ -1,6 +1,11 @@
 <launch>
-  <node name="capsense_poller" pkg="hero" type="capsense_poller.py" />
-  <node name="basic_interpreter" pkg="hero" type="basic_interpreter.py" />
-  <node name="basic_actor" pkg="hero" type="basic_actor.py" />
-  <node name="blink_generator" pkg="hero" type="blink_generator.py" />
+<group ns='motor'>
+  <node name="head" pkg="hero" type="motor_controller.py" output='screen'>
+    <param name='pos_pin' value='0'/>
+      <param name='neg_pin' value='1'/>
+      <param name='low_limit' value='0'/>
+      <param name='high_limit' value='1024'/>
+  </node>
+</group>
+
 </launch>

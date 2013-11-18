@@ -12,23 +12,29 @@ from hero.msg import MotorCoordinate
     
 class Motor:
     # TODO: Include max_voltage so that avg voltage from PWM doesn't exceed ratings of motor
-    def __init__(self, name, pins, limits, max_voltage=6, threshold=5):
+    def __init__(self): 
+        # , name, pins, limits, max_voltage=6, threshold=5):
         # pins (pos, neg), limits (low, high)
-        self.name = name
-        self.pos, self.neg = pins
-        self.low, self.high = limits
+        self.name = 'test'
+        # self.pos, self.neg = pins
+        # self.low, self.high = limits
         
-        # how close we have to be to the goal before we stop
-        self.threshold = threshold
+        # # how close we have to be to the goal before we stop
+        # self.threshold = threshold
 
-        self.goal = None
-        self.position = None
+        # self.goal = None
+        # self.position = None
 
-        # move motor to starting place
-        self.move_to(0)
+        # # move motor to starting place
+        # self.move_to(0)
 
         # Name node, subscribe to positions topic, and setup shutdown handle
-        rospy.init_node("{}_motor".format(name.lower()))
+        rospy.init_node("{}_motor".format(self.name.lower(), anonymous=True))
+        
+        import pdb
+        pdb.set_trace()
+
+
         rospy.Subscriber("goals", MotorCoordinate, self.goal_callback)
         rospy.Subscriber("locations", MotorCoordinate, self.update)
         rospy.on_shutdown(self.stop)
@@ -37,7 +43,7 @@ class Motor:
         if data.name == self.name:
             self.move_to(data.position)
 
-    def move_to(position):
+    def move_to(self, position):
         # position hasn't been reported yet
         if self.position == None:
             return
@@ -67,7 +73,6 @@ class Motor:
         servo.setMotorSpeed(self.pos, self.neg, 0)
 
 if __name__ == '__main__':
-
     # DEFINITIONS
     HEAD_PINS = (0,1)
     LARM_PINS = (2,3)
@@ -79,14 +84,8 @@ if __name__ == '__main__':
     RARM_LIMITS = (0, 1024)
     BLINK_LIMITS = (0, 1024)
 
-    # CREATE MOTOR NODES
+    # CREATE MOTOR NODES. "HEAD", HEAD_PINS, HEAD_LIMITS)
     # TODO: Do we want analog channel to report by channel or title?
-    Motor("HEAD", HEAD_PINS, HEAD_LIMITS)
-    Motor("LARM", LARM_PINS, LARM_LIMITS)
-    Motor("RARM", RARM_PINS, RARM_LIMITS)
-    Motor("BLINK", BLINK_PINS, BLINK_LIMITS)
-
-    # TODO: Pur motor doesn't conform to our model
-    Motor("PUR", PUR_PINS, PUR_LIMITS)
+    Motor()
 
     rospy.spin()
