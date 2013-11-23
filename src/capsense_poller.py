@@ -4,8 +4,9 @@ import roslib; roslib.load_manifest('hero')
 
 import rospy
 from hero.msg import CapSense
+
 import RPi.GPIO as GPIO
-import mpr121
+from herolib.external import MPR121
 import time
 
 MPR121_IRQ = 17
@@ -22,16 +23,16 @@ def poller():
     #GPIO.setup(MPR121_IRQ, GPIO.IN)
 
     # Initialize MP121 capacitive touch board
-    mpr121.TOU_THRESH = 0x15
-    mpr121.REL_THRESH = 0x12
-    mpr121.setup(MPR121_ADDR)
+    MPR121.TOU_THRESH = 0x15
+    MPR121.REL_THRESH = 0x12
+    MPR121.setup(MPR121_ADDR)
 
     # set polling rate in Hz
     r = rospy.Rate(4)
     old_touch_data = 0
     
     while not rospy.is_shutdown():
-        touch_data = mpr121.readData(MPR121_ADDR)
+        touch_data = MPR121.readData(MPR121_ADDR)
         touch_data &= 0b111111
 
         if not touch_data == old_touch_data:

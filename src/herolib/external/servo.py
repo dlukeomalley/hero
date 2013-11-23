@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-from Adafruit_PWM_Servo_Driver import PWM
+from ..thirdparty.Adafruit_PWM_Servo_Driver import PWM
 import RPi.GPIO as GPIO
 
 # Initialize the GPIO pin.  One pin will be used to turn

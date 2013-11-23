@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
-import mpr121
+
+from herolib.external import MPR121
 import time
 
 CAPSENSE_IRQ_PIN = 8
@@ -11,14 +12,14 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(CAPSENSE_IRQ_PIN, GPIO.IN)
 
 # Initialize MP121 capacitive touch board
-mpr121.TOU_THRESH = 0x15
-mpr121.REL_THRESH = 0x12
-mpr121.setup(MPR121_ADDR)
+MPR121.TOU_THRESH = 0x15
+MPR121.REL_THRESH = 0x12
+MPR121.setup(MPR121_ADDR)
 
 # Loop
 while True:
     sensor = [0] * NUM_TOUCH_PADS
-    touch_data = mpr121.readData(MPR121_ADDR)
+    touch_data = MPR121.readData(MPR121_ADDR)
 
     #print bin(touch_data)
 

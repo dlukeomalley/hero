@@ -4,7 +4,6 @@ import roslib; roslib.load_manifest('hero')
 
 import rospy
 from hero.msg import CapSense, Action
-import pdb
 
 data_set = {(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): None,
             (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY UPPER",

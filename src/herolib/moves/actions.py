@@ -1,4 +1,5 @@
-import servo_driver
+from ..external import servo
+
 import time
 import random
 
@@ -28,11 +29,11 @@ HEAD_SERVO = 12
 
 def set_motor(motor, speed):
     (pos, neg) = motor
-    servo_driver.setMotorSpeed(neg, pos, speed)
+    servo.setMotorSpeed(neg, pos, speed)
 
 def stop_motor(motor):
     (pos, neg) = motor
-    servo_driver.setMotorSpeed(neg, pos, 0)
+    servo.setMotorSpeed(neg, pos, 0)
 
 def stop_all():
     stop_motor(TAIL_M)
@@ -119,7 +120,7 @@ def arms_close():
 def headtilt(angle):
     # TODO: map correctly
     angle += 90
-    servo_driver.setServoPosition(HEAD_SERVO, angle)
+    servo.setServoPosition(HEAD_SERVO, angle)
 
 
 ####################################################################

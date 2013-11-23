@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest('hero')
-import actions as output
+#import roslib; roslib.load_manifest('hero')
+import herolib.moves.actions as output
 
 import rospy
 from hero.msg import Action

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import time
 import roslib; roslib.load_manifest('hero')
-
 import rospy
 from hero.msg import Action
+
+import time
 import random
 
 def blink():
