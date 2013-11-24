@@ -24,7 +24,7 @@ class Motor:
         self.low, self.high = params['limits']
         self.threshold = params['threshold']
 
-        rospy.loginfo("INFO: motor {} ON".format(self.name))
+        rospy.loginfo("INFO: motor {} on".format(self.name))
         
         self.goal = 0
         self.position = None
@@ -60,6 +60,7 @@ class Motor:
             self.move_to(self.goal)
 
     def stop(self):
+        rospy.loginfo("INFO: stopping motor {}".format(self.name)
         servo.setMotorSpeed(self.pos, self.neg, 0)
 
 if __name__ == '__main__':

@@ -22,4 +22,8 @@
 			<param name='threshold' value='5'/>
 		</node>
 	</group>
+
+	<group ns='sensors'>
+		<node name="analog" pkg="hero" type="analog_poller.py"/>
+	</group>
 </launch>
