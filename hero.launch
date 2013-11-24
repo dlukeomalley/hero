@@ -1,11 +1,28 @@
 <launch>
-<group ns='motor'>
-  <node name="head" pkg="hero" type="motor_controller.py" output='screen'>
-    <param name='pos_pin' value='0'/>
-      <param name='neg_pin' value='1'/>
-      <param name='low_limit' value='0'/>
-      <param name='high_limit' value='1024'/>
-  </node>
-</group>
+	<group ns='motors'>
+		<node name="head" pkg="hero" type="motor_controller.py">
+			<rosparam param='pins'>[0, 1]</rosparam>
+			<rosparam param='limits'>[0, 1]</rosparam>
+			<param name='threshold' value='5'/>
+		</node>
 
+		<!--node name="larm" pkg="hero" type="motor_controller.py">
+			<param name='pos_pin' value='2'/>
+			<param name='neg_pin' value='3'/>
+			<param name='low_limit' value='0'/>
+			<param name='high_limit' value='1024'/>
+		</node>
+		<node name="rarm" pkg="hero" type="motor_controller.py">
+			<param name='pos_pin' value='4'/>
+			<param name='neg_pin' value='5'/>
+			<param name='low_limit' value='0'/>
+			<param name='high_limit' value='1024'/>
+		</node>
+		<node name="blink" pkg="hero" type="motor_controller.py">
+			<param name='pos_pin' value='6'/>
+			<param name='neg_pin' value='7'/>
+			<param name='low_limit' value='0'/>
+			<param name='high_limit' value='1024'/>
+		</node-->
+	</group>
 </launch>
