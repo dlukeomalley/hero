@@ -32,16 +32,6 @@ def setServoPosition(channel, position):
   pulse = position * servoSpan/180 + servoMin
   pwm.setPWM(channel, 0, pulse)
 
-# Turns all of the motors on, though they have a starting speed
-# of zero. This method must be called at the top of any program.
-# def motorsOn():
-#   GPIO.output(enablePin, True)
-
-# # Turns all of the motors off. Use this to save power or end
-# # a program.  To turn an individual motor off, set its speed to
-# # zero.
-# def motorsOff():
-#   GPIO.output(enablePin, False)
 
 # Motors take up two channels on the adafruit PWM board. The
 # speed variable should be -1 for counter clockwise and 1 for 
@@ -49,9 +39,11 @@ def setServoPosition(channel, position):
 def setMotorSpeed(channelA, channelB, speed):
   if speed > 1:
     speed = 1
-  if speed < -1:
+  else:
     speed = -1
+
   pulse = int(abs(speed)*4095)
+  
   if speed < 0:
     pwm.setPWM(channelA, 0, pulse)
     pwm.setPWM(channelB, 0, 0)

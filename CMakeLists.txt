@@ -48,6 +48,7 @@ add_message_files(
   FILES
   Action.msg
   CapSense.msg
+  MotorCoordinate.msg
 )
 
 ## Generate services in the 'srv' folder
