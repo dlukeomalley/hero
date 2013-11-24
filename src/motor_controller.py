@@ -18,16 +18,13 @@ class Motor:
         rospy.Subscriber("locations", MotorCoordinate, self.update)
         rospy.on_shutdown(self.stop)
 
-        import pdb
-        pdb.set_trace()
-
         self.name = rospy.get_name().split('/')[-1]
         params = rospy.get_param(self.name)
         self.pos, self.neg = params['pins']
         self.low, self.high = params['limits']
         self.threshold = params['threshold']
 
-        print "Name: {}".format(self.name)
+        rospy.loginfo("INFO: motor {} ON".format(self.name))
         
         self.goal = 0
         self.position = None
@@ -49,6 +46,7 @@ class Motor:
         if abs(delta) <= self.threshold:
             delta = 0
 
+        rospy.loginfo("INFO: motor {} moving to {}".format(self.name, self.goal))
         # Speed must be between -1 and 1
         servo.setMotorSpeed(self.pos, self.neg, delta/100.0)
 
@@ -57,6 +55,8 @@ class Motor:
             # remap ADC values to 0-100
             position = 100.0 * (data.position - self.low) / (self.high - self.low)
             self.position = int(position)
+
+            rospy.loginfo("INFO: motor {} @ {}".format(self.name, self.position))
             self.move_to(self.goal)
 
     def stop(self):
