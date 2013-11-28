@@ -32,6 +32,9 @@ class Brain():
             return
 
         script = choice(self.event_map[event])
+        
+        import pdb
+        pdb.set_trace()
 
         # with self.perm_lock:
         #     contended = []
@@ -47,7 +50,7 @@ class Brain():
         # create a new thread and run import's main function
 
         # consider passing own name here so sidestep collission issue
-        thread = threading.Thread(target=script.run, args=(self))
+        thread = threading.Thread(target=script.run, args=(self,))
         rospy.loginfo("Launching thread: {}".format(thread.name))
         thread.start()
 
@@ -63,6 +66,7 @@ class Brain():
 
     # decorate these with if permisions not owned, kill thread? would be cleaner code...
     def move_to(self):
+        sys.exit()
         # check permissions, if permissions no longer owned, shut down thread
         rospy.loginfo("Hello from {}".format(threading.current_thread().name))
 	time.sleep(1)
@@ -74,8 +78,15 @@ class Brain():
     def move_and_wait(self, **kargs):
         pass
 
-    def cleanup(self, thread):
+    # aware of what thread called it
+    def cleanup(self):
+        # get lock on perm dictionary, remove thread from all ownership
         pass
+
+    # aware of what thread called it
+    def exit(self):
+        rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
+        self.cleanup()
 
 if __name__ == '__main__':
     Brain()
