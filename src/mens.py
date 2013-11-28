@@ -33,9 +33,6 @@ class Brain():
 
         script = choice(self.event_map[event])
 
-        import pdb
-        pdb.set_trace()
-
         # with self.perm_lock:
         #     contended = []
         #     # check if any of our perms are held
@@ -50,9 +47,15 @@ class Brain():
         # create a new thread and run import's main function
 
         # consider passing own name here so sidestep collission issue
-        thread = threading.Thread(target=script.run)
+        thread = threading.Thread(target=script.run, args=(self))
         rospy.loginfo("Launching thread: {}".format(thread.name))
         thread.start()
+
+    # TODO: Have this load all scripts from folder
+    def load_scripts(self):
+        test = __import__('move')
+
+        return {"BELLY_RUB": [test]}
 
     def update_location(self, data):
         # update location dictionary, read by children nodes so they know when they can continue running
@@ -70,12 +73,6 @@ class Brain():
 
     def move_and_wait(self, **kargs):
         pass
-
-    # TODO: Have this load all scripts from folder
-    def load_scripts(self):
-        test = __import__('move')
-
-        return {"BELLY_RUB": [test]}
 
     def cleanup(self, thread):
         pass
