@@ -31,7 +31,7 @@ class Brain():
             rospy.logwarn("BRAIN: Unrecognized event - {}".format(event))
             return
 
-        move = choice(self.event_map[event])
+        script = choice(self.event_map[event])
 
         import pdb
         pdb.set_trace()
@@ -50,7 +50,7 @@ class Brain():
         # create a new thread and run import's main function
 
         # consider passing own name here so sidestep collission issue
-        thread = threading.Thread(target=test_func)
+        thread = threading.Thread(target=script.run)
         rospy.loginfo("Launching thread: {}".format(thread.name))
         thread.start()
 
@@ -59,9 +59,10 @@ class Brain():
         pass
 
     # decorate these with if permisions not owned, kill thread? would be cleaner code...
-    def move(self, priority_object, **kargs):
+    def move_to(self):
         # check permissions, if permissions no longer owned, shut down thread
-        pass
+        rospy.loginfo("Hello from {}".format(threading.current_thread().name))
+	time.sleep(1)
 
     def wait_until(self, **kargs):
         # check permissions on every cycle, could be that thread doens't know it should shut down?
