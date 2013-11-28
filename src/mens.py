@@ -26,12 +26,15 @@ class Brain():
     def callback(self, data):
         event = data.type
 
-        # # if not a recognized event, exit
-        # if not event in self.event_map:
-        #     rospy.logwarn("BRAIN: Unrecognized event - {}".format(event))
-        #     return
+        # if not a recognized event, exit
+        if not event in self.event_map:
+            rospy.logwarn("BRAIN: Unrecognized event - {}".format(event))
+            return
 
-        # move = choice(self.event_map[event])
+        move = choice(self.event_map[event])
+
+        import pdb
+        pdb.set_trace()
 
         # with self.perm_lock:
         #     contended = []
@@ -46,16 +49,9 @@ class Brain():
         # release lock
         # create a new thread and run import's main function
 
-        def test_func():
-            for x in range(4):
-                rospy.loginfo("Hello from {}".format(threading.current_thread().name))
-                time.sleep(1)
-
-            rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
-
         # consider passing own name here so sidestep collission issue
         thread = threading.Thread(target=test_func)
-        rospy.loginfo("Launching thread: {}".(thread.name))
+        rospy.loginfo("Launching thread: {}".format(thread.name))
         thread.start()
 
     def update_location(self, data):
@@ -74,8 +70,11 @@ class Brain():
     def move_and_wait(self, **kargs):
         pass
 
+    # TODO: Have this load all scripts from folder
     def load_scripts(self):
-        pass
+        test = __import__('move')
+
+        return {"BELLY_RUB": [test]}
 
     def cleanup(self, thread):
         pass
