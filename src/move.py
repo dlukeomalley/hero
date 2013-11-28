@@ -4,8 +4,7 @@ perms = [ "LARM",
 
 def run():
 	for x in range(4):
-		rospy.loginfo("Hello from {}".format(threading.current_thread().name))
-		time.sleep(1)
+		self.move_to()
 
 	rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
 
