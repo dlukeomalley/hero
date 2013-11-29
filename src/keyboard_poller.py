@@ -6,14 +6,14 @@ import rospy
 from hero.msg import Action
 
 def poll():
-    valid_input = { 'h': 'BELLY_RUB',
-                'b': 'BLINK',
-                's': 'HEAD_PAT',
-                'p': 'PUR',
-                'w': 'BELLY_RUB',
-                't': 'TEST',
-                'wl': 'LARM_GRAB',
-                'wr': 'RARM_GRAB'}
+    valid_input = { 'h' : 'BELLY_RUB',
+                    'b' : 'BLINK',
+                    's' : 'HEAD_PAT',
+                    'p' : 'PUR',
+                    'w' : 'BELLY_RUB',
+                    't' : 'TEST',
+                    'wl': 'LARM_GRAB',
+                    'wr': 'RARM_GRAB' }
 
     rospy.init_node('keyboard_poller', anonymous=True)
     pub = rospy.Publisher('events', Action)

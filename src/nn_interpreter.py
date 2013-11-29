@@ -33,7 +33,7 @@ class Interpreter():
         # ignore action if action is None
         if action:
             rospy.loginfo("OUTPUT: {}".format(action))
-            pub.publish(abstract_action)
+            self.pub.publish(abstract_action)
 
     def euclidean_distance(self, s1, s2):
         return sum([(x - y)**2 for x, y in zip(s1, s2)])

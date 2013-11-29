@@ -1,12 +1,14 @@
-perms = [ "LARM",
-		  "RARM",
-		  "NECK"]
-
-priority = 5
+# Motors script needs to "own" to run
+# Decides which scripts can prempt others
+# Name w/ no spaces
+motors = set(["LARM",
+		   	  "RARM",
+		   	  "NECK"])	
+level = 5
 
 def run(parent):
 	try:
-		for x in range(4):
+		for x in range(5):
 			parent.move_to()
 
 	finally:

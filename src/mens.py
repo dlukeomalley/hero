@@ -18,75 +18,92 @@ class Brain():
         rospy.Subscriber("events", Action, self.callback)
         rospy.Subscriber("locations", MotorCoordinate, self.update_location)
 
-        self.own = {} # this could contain motors to a script class that contains priority, name, etc
-        # initialize lock here
-        # load everything from herolib.moves?
-        self.event_map = self.load_scripts()
+        self.locations = {}
+        self.event_dict = self.load_scripts()
+        self.perms_lock = threading.Lock()
+
+        self.ownership_dict = { "BLINK": None,
+                                "NECK" : None,
+                                "LARM" : None,
+                                "RARM" : None, 
+                                "PUR"  : None}
 
     def callback(self, data):
         event = data.type
 
-        # if not a recognized event, exit
-        if not event in self.event_map:
+        if not event in self.event_dict:
             rospy.logwarn("BRAIN: Unrecognized event - {}".format(event))
             return
 
-        script = choice(self.event_map[event])
+        script = choice(self.event_dict[event])
         
-        import pdb
-        pdb.set_trace()
+        with self.perms_lock:
+            # set of threads that we can steal ownership from
+            for m in script.motors:
+                owner = self.ownership_dict[m]
+                if not owner:
+                    continue
 
-        # with self.perm_lock:
-        #     contended = []
-        #     # check if any of our perms are held
-        #     for m in move.perms:
-        #         # if motor is already spoken for, make note
-        #         if self.motor[m]:
-        #             contended.append[m]
-        # check permissions, can we own or evict if necessary?
-        # if we evict, kill thread that was running previously
-        # if we can't, just return now
-        # release lock
-        # create a new thread and run import's main function
+                if script.level >= owner.level:
+                    rospy.loginfo("BRAIN: Permission denied - {}".format(script.name))
+                    return
+                else: 
+                    self.shutdown_flags.add(owner)
 
-        # consider passing own name here so sidestep collission issue
-        thread = threading.Thread(target=script.run, args=(self,))
-        rospy.loginfo("Launching thread: {}".format(thread.name))
-        thread.start()
+            # cleanup threads we're stealing from
+            for owner in self.shutdown_flags:
+                for m in owner.motors:
+                    self.ownership_dict[m] = None
+
+            thread = threading.Thread(target=script.run, args=(self,))
+            thread.level = script.level
+            thread.motors = script.motors
+
+            for m in thread.motors:
+                self.ownership_dict[m] = thread
+
+            rospy.loginfo("Launching thread: {}".format(thread.name))
+            thread.start()
+
+    def check_perms(self, original_func):
+        def new(original_func):
+            cur_thread = threading.current_thread()
+
+            if cur_thread in self.shutdown_flags:
+                rospy.loginfo("BRAIN: Permissions taken - {}".format(cur_thread.name))
+                self.shutdown_flags.pop(cur_thread)
+                sys.exit()
+
+            return original_func
+        return new
+
+    def exit(self):
+        with self.perms_lock:
+            cur_thread = threading.current_thread()
+
+            for m in cur_thread.motors:
+                if self.ownership_dict[m] == cur_thread:
+                    self.ownership_dict[m] = None
+
+        rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
+        sys.exit()
 
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
-        test = __import__('move')
-
-        return {"BELLY_RUB": [test]}
+        return {"BELLY_RUB": [__import__('move5')],
+                "TEST": [__import__('move1')]}
 
     def update_location(self, data):
-        # update location dictionary, read by children nodes so they know when they can continue running
-        pass
+        self.location[data.name] = data.positition
 
-    # decorate these with if permisions not owned, kill thread? would be cleaner code...
+    @check_perms
     def move_to(self):
-        sys.exit()
-        # check permissions, if permissions no longer owned, shut down thread
         rospy.loginfo("Hello from {}".format(threading.current_thread().name))
-	time.sleep(1)
 
-    def wait_until(self, **kargs):
-        # check permissions on every cycle, could be that thread doens't know it should shut down?
+    @check_perms
+    def wait_until(self):
+        # sleep until self.location has the right things
         pass
-
-    def move_and_wait(self, **kargs):
-        pass
-
-    # aware of what thread called it
-    def cleanup(self):
-        # get lock on perm dictionary, remove thread from all ownership
-        pass
-
-    # aware of what thread called it
-    def exit(self):
-        rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
-        self.cleanup()
 
 if __name__ == '__main__':
     Brain()
