@@ -7,7 +7,8 @@ from hero.msg import MotorCoordinate
 
 DEBUG = True
 if not DEBUG:
-    from herolib.thirdparty import MCP3008
+    import herolib.thirdparty.Adafruit_MCP3008 as MCP3008
+
 
 def poll():
     pub = rospy.Publisher('/motors/locations', MotorCoordinate)
@@ -22,6 +23,7 @@ def poll():
 
     while not rospy.is_shutdown():
         # code to read from analog and send out to chip goes here
+
         if DEBUG:
             voltages = [0]*8
         else:

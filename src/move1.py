@@ -11,13 +11,13 @@ level = 10
 name = "High Level Test - 1"
 
 def run(parent):
-#	try:
+	try:
 		# YOUR CODE GOES HERE
 		
-	parent.move_and_wait(LARM=10, RARM=100)
+		parent.move_and_wait(LARM=10, RARM=100)
 
 		# YOUR CODE ENDS HERE
 
-#	finally:
+	finally:
 		# DO NOT MODIFY THIS CODE
-#		parent.exit()
+		parent.exit()
