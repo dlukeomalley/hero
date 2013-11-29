@@ -13,9 +13,9 @@ name = "High Level Test - 50"
 def run(parent):
 	try:
 		# YOUR CODE GOES HERE
-		
-		parent.move_to()
-		paren.wait_until()
+
+		parent.move_to(RARM=80, LARM=50)
+		parent.wait_until(RARM=40)
 
 		# YOUR CODE ENDS HERE
 

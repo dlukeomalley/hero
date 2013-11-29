@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
-import herolib.moves
-from herolib.external import servo
+DEBUG=True
+
+if not DEBUG:
+    from herolib.external import servo
 
 import roslib; 
 roslib.load_manifest('hero')
@@ -32,6 +34,7 @@ class Motor:
 
     def goal_callback(self, data):
         if data.name == self.name:
+            rospy.loginfo("POS RECV: {}".format(self.name))
             self.move_to(data.position)
 
     def move_to(self, position):
@@ -46,8 +49,10 @@ class Motor:
         if abs(delta) <= self.threshold:
             delta = 0
 
-        rospy.loginfo("INFO: motor {} moving to {}".format(self.name, self.goal))
+        #rospy.loginfo("INFO: motor {} moving to {}".format(self.name, self.goal))
         # Speed must be between -1 and 1
+        if DEBUG:
+            return
         servo.setMotorSpeed(self.pos, self.neg, delta/100.0)
 
     def update(self, data):
@@ -56,11 +61,13 @@ class Motor:
             position = 100.0 * (data.position - self.low) / (self.high - self.low)
             self.position = int(position)
 
-            rospy.loginfo("INFO: motor {} @ {}".format(self.name, self.position))
+            #rospy.loginfo("INFO: motor {} @ {}".format(self.name, self.position))
             self.move_to(self.goal)
 
     def stop(self):
         rospy.loginfo("INFO: stopping motor {}".format(self.name))
+        if DEBUG:
+            return
         servo.setMotorSpeed(self.pos, self.neg, 0)
 
 if __name__ == '__main__':

@@ -14,9 +14,9 @@ class Brain():
     def __init__(self):
         # TODO: In launch file have this restart if it errors and closes prematurely
         rospy.init_node('brain', anonymous=True)
-        self.pub = rospy.Publisher("goals", MotorCoordinate)
+        self.pub = rospy.Publisher("/motors/goals", MotorCoordinate)
         rospy.Subscriber("events", Action, self.callback)
-        rospy.Subscriber("locations", MotorCoordinate, self.update_location)
+        rospy.Subscriber("/motors/locations", MotorCoordinate, self.update_location)
 
         self.event_dict = self.load_scripts()
         self.perms_lock = threading.Lock()
@@ -104,16 +104,15 @@ class Brain():
                 "TEST": [__import__('move1')]}
 
     def update_location(self, data):
-        self.location[data.name] = data.positition
-        rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
-
+        self.locations[data.name] = data.position
+        #rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
 
     def move_to(self, **kargs):
         self.check_perms()
 
         for motor, position in kargs.iteritems():
             rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
-            self.pub.publish(Action(motor, position))
+            self.pub.publish(MotorCoordinate (motor, position))
         
     def wait_until(self, **kargs):
         reached = False
@@ -132,8 +131,8 @@ class Brain():
                 break
 
     def move_and_wait(self, **kargs):
-        self.move_to(kargs)
-        self.wait_until(kargs)
+        self.move_to(**kargs)
+        self.wait_until(**kargs)
 
     # TODO: Play sound
 
