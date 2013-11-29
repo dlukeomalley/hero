@@ -1,19 +1,24 @@
-# Motors script needs to "own" to run
-# Decides which scripts can prempt others
-# Name w/ no spaces
-motors = set(["LARM",
-		   	  "RARM",
-		   	  "NECK"])	
-level = 5
-name = "move5"
+# Use only the motors you need.
+# Valid motors are BLINK, NECK, LARM, RARM, PUR.
+motors = [	"LARM",
+			"RARM",  ]
+
+# The lower the level, the more important this script is.
+# Recommended to use 0, 10, 20, 30, 40...
+level = 50
+
+# Human readable name for debugging purposes.
+name = "High Level Test - 50"
 
 def run(parent):
 	try:
-		for x in range(5):
-			parent.move_to()
-	finally:
-	 	parent.exit()
+		# YOUR CODE GOES HERE
+		
+		parent.move_to()
+		paren.wait_until()
 
-# move("LARM"=5, "RARM"=10)
-# wait_until("LARM"=5, "RARM"=10)
-# move_and_wait("LARM"=5, "RARM"=10)
+		# YOUR CODE ENDS HERE
+
+	finally:
+		# DO NOT MODIFY THIS CODE
+		parent.exit()

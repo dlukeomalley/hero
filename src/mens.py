@@ -29,6 +29,12 @@ class Brain():
                                 "RARM" : None, 
                                 "PUR"  : None}
 
+        self.threshold = {  "BLINK": 5,
+                            "NECK" : 5,
+                            "LARM" : 5,
+                            "RARM" : 5, 
+                            "PUR"  : 5, }
+
     def callback(self, data):
         event = data.type
 
@@ -39,7 +45,6 @@ class Brain():
         script = choice(self.event_dict[event])
         
         with self.perms_lock:
-            # set of threads that we can steal ownership from
             for m in script.motors:
                 owner = self.ownership_dict[m]
                 if not owner:
@@ -49,10 +54,9 @@ class Brain():
                     rospy.loginfo("BRAIN: Permission denied - {}".format(script.name))
                     return
                 else: 
-                    rospy.loginfo("BRAIN: Adding to shutdown - {}".format(owner.name))
+                    #rospy.loginfo("BRAIN: Adding to shutdown - {}".format(owner.name))
                     self.shutdown_flags.add(owner)
 
-            # cleanup threads we're stealing from
             for owner in self.shutdown_flags:
                 for m in owner.motors:
                     self.ownership_dict[m] = None
@@ -87,20 +91,44 @@ class Brain():
 
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
+        # load all scripts
+        # associate them with actions
+        # return 
+
         return {"BELLY_RUB": [__import__('move5')],
                 "TEST": [__import__('move1')]}
 
     def update_location(self, data):
         self.location[data.name] = data.positition
 
-    def move_to(self):
+    def move_to(self, **kargs):
         self.check_perms()
-        rospy.loginfo("Hello from {}".format(threading.current_thread().name))
-        time.sleep(1)
 
-    def wait_until(self):
-        # sleep until self.location has the right things
-        pass
+        for motor, position in kargs.iteritems():
+            rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
+            self.pub.publish(Action(motor, position))
+        
+    def wait_until(self, **kargs):
+        reached = False
+
+        while True:
+            reached = True
+            
+            self.check_perms()
+            for motor, position in kargs.iteritems():
+                if abs(self.locations[motor] - position) > self.threshold[motor]:
+                    time.sleep(.1)
+                    reached = False
+                    break
+
+            if reached:
+                break
+
+    def move_and_wait(self, **kargs):
+        self.move_to(kargs)
+        self.wait_until(kargs)
+
+    # TODO: Play sound
 
 if __name__ == '__main__':
     Brain()
