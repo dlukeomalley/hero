@@ -26,4 +26,9 @@
 	<group ns='sensors'>
 		<node name="analog" pkg="hero" type="analog_poller.py"/>
 	</group>
+
+	<node name="BRAIN" pkg="hero" type="mens.py" />
+	<node name="INTERPRETER" pkg="hero" type="nn_interpreter.py"/>
+	<node name="CAPSENSE" pkg="hero" type="capsense_poller.py" />
+
 </launch>

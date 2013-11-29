@@ -18,7 +18,6 @@ class Brain():
         rospy.Subscriber("events", Action, self.callback)
         rospy.Subscriber("locations", MotorCoordinate, self.update_location)
 
-        self.locations = {}
         self.event_dict = self.load_scripts()
         self.perms_lock = threading.Lock()
         self.shutdown_flags = set()
@@ -34,6 +33,12 @@ class Brain():
                             "LARM" : 5,
                             "RARM" : 5, 
                             "PUR"  : 5, }
+
+        self.locations = {  "BLINK": 0,
+                            "NECK" : 0,
+                            "LARM" : 0,
+                            "RARM" : 0, 
+                            "PUR"  : 0, }
 
     def callback(self, data):
         event = data.type
@@ -100,6 +105,8 @@ class Brain():
 
     def update_location(self, data):
         self.location[data.name] = data.positition
+        rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
+
 
     def move_to(self, **kargs):
         self.check_perms()
