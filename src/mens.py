@@ -21,6 +21,7 @@ class Brain():
         self.locations = {}
         self.event_dict = self.load_scripts()
         self.perms_lock = threading.Lock()
+        self.shutdown_flags = set()
 
         self.ownership_dict = { "BLINK": None,
                                 "NECK" : None,
@@ -48,6 +49,7 @@ class Brain():
                     rospy.loginfo("BRAIN: Permission denied - {}".format(script.name))
                     return
                 else: 
+                    rospy.loginfo("BRAIN: Adding to shutdown - {}".format(owner.name))
                     self.shutdown_flags.add(owner)
 
             # cleanup threads we're stealing from
@@ -65,17 +67,12 @@ class Brain():
             rospy.loginfo("Launching thread: {}".format(thread.name))
             thread.start()
 
-    def check_perms(self, original_func):
-        def new(original_func):
-            cur_thread = threading.current_thread()
-
-            if cur_thread in self.shutdown_flags:
-                rospy.loginfo("BRAIN: Permissions taken - {}".format(cur_thread.name))
-                self.shutdown_flags.pop(cur_thread)
-                sys.exit()
-
-            return original_func
-        return new
+    def check_perms(self):
+        cur_thread = threading.current_thread()
+        if cur_thread in self.shutdown_flags:
+            rospy.loginfo("BRAIN: Permissions stolen - {}".format(cur_thread.name))
+            self.shutdown_flags.discard(cur_thread)
+            sys.exit()
 
     def exit(self):
         with self.perms_lock:
@@ -96,11 +93,11 @@ class Brain():
     def update_location(self, data):
         self.location[data.name] = data.positition
 
-    @check_perms
     def move_to(self):
+        self.check_perms()
         rospy.loginfo("Hello from {}".format(threading.current_thread().name))
+        time.sleep(1)
 
-    @check_perms
     def wait_until(self):
         # sleep until self.location has the right things
         pass
