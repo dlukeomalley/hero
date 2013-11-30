@@ -5,14 +5,14 @@ import roslib; roslib.load_manifest('hero')
 import rospy
 from hero.msg import Action, MotorCoordinate
 
-import threading
-import sys
 from random import choice
+import threading
 import time
+import sys
+import os
 
 class Brain():
     def __init__(self):
-        # TODO: In launch file have this restart if it errors and closes prematurely
         rospy.init_node('brain', anonymous=True)
         self.pub = rospy.Publisher("/motors/goals", MotorCoordinate)
         rospy.Subscriber("events", Action, self.callback)
@@ -96,12 +96,22 @@ class Brain():
 
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
-        # load all scripts
-        # associate them with actions
-        # return 
+        event_to_output = {
+                "BELLY_RUB":[__import__("herolib/moves/move5")],
+                "TEST":[__import__("herolib/moves/move1")]}
 
-        return {"BELLY_RUB": [__import__('move5')],
-                "TEST": [__import__('move1')]}
+        # event_to_output = {}
+
+        # for fd in os.listdir("herolib/moves"):
+        #     script = __import__("herolib/moves" + fd)
+            
+        #     for e in script.events:
+        #         event_to_output[e].append(script)
+
+        # return event_to_output
+
+        return event_to_output
+
 
     def update_location(self, data):
         self.locations[data.name] = data.position
@@ -134,7 +144,8 @@ class Brain():
         self.move_to(**kargs)
         self.wait_until(**kargs)
 
-    # TODO: Play sound
+    def play(self, path):
+        os.system('mpg321 {} &'.format(path))
 
 if __name__ == '__main__':
     Brain()
