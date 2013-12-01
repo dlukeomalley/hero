@@ -3,12 +3,13 @@ import time
 import os
 import RPi.GPIO as GPIO
 
-SPICLK = 18
-SPIMISO = 23
-SPIMOSI = 24
-SPICS = 25
+SPICLK = 7
+SPIMISO = 11
+SPIMOSI = 13
+SPICS = 15
 
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setwarnings(False)
 GPIO.setup(SPIMOSI, GPIO.OUT)
 GPIO.setup(SPIMISO, GPIO.IN)
 GPIO.setup(SPICLK, GPIO.OUT)
@@ -57,8 +58,8 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
         return adcout
 
 def read_all():
-    adcout = [0]*8
-    for i in range(8):
-        adcout = readadc(i, SPICLK, SPIMOSI, SPIMISO, SPICS)
+	adcout = [0]*8
+	for i in range(8):
+		adcout[i] = readadc(i, SPICLK, SPIMOSI, SPIMISO, SPICS)
 
-    return adcout
+	return adcout
