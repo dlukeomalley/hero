@@ -5,9 +5,8 @@ import roslib; roslib.load_manifest('hero')
 import rospy
 from hero.msg import Action, MotorCoordinate
 
-from random import choice
+import random
 import threading
-import time
 import sys
 import os
 
@@ -47,7 +46,7 @@ class Brain():
             rospy.logwarn("BRAIN: Unrecognized event - {}".format(event))
             return
 
-        script = choice(self.event_dict[event])
+        script = random.choice(self.event_dict[event])
         
         with self.perms_lock:
             for m in script.motors:
@@ -112,11 +111,22 @@ class Brain():
 
         return event_to_output
 
+    # Allow ID team to easily write scripts that harness power of randomness
+    def parse_args(old_func):
+        def new(**kargs):
+            for motor, position in kargs.iteritems():
+                if type(position) == tuple:
+                    a, b = position
+                    kargs[motor] = random.randint(a, b)
+
+            return old_func(**kargs)
+        return new
 
     def update_location(self, data):
         self.locations[data.name] = data.position
         #rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
 
+    @parse_args
     def move_to(self, **kargs):
         self.check_perms()
 
@@ -124,23 +134,30 @@ class Brain():
             rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
             self.pub.publish(MotorCoordinate (motor, position))
         
+    @parse_args
     def wait_until(self, **kargs):
         reached = False
 
         while True:
             reached = True
-            
+    
             self.check_perms()
             for motor, position in kargs.iteritems():
                 if abs(self.locations[motor] - position) > self.threshold[motor]:
-                    time.sleep(.1)
+                    rospy.sleep(.1)
                     reached = False
                     break
 
             if reached:
                 break
 
+    @parse_args
     def move_and_wait(self, **kargs):
+        for motor, position in kargs.iteritems():
+            if type(position) == tuple:
+                a, b = position
+                kargs[motor] = random.randint(a, b)
+
         self.move_to(**kargs)
         self.wait_until(**kargs)
 

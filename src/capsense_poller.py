@@ -6,51 +6,57 @@ import rospy
 from hero.msg import CapSense
 
 import RPi.GPIO as GPIO
-from herolib.external import MPR121
-import time
+from herolib.thirdparty.Adafruit_MCP230XX import Adafruit_MCP230XX
 
-MPR121_IRQ = 17
-NUM_TOUCH_PADS = 12
-MPR121_ADDR = 0x5a
+RESET = 16
+INT = None
+NUM_TOUCH_PADS = 7
 
-def poller():
+def poll():
     # Initialize ROS features
     pub = rospy.Publisher('capsense_state', CapSense)
     rospy.init_node('capsense_poller', anonymous=True)
 
     # Initialize GPIO Pin numbering and I/O
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setup(MPR121_IRQ, GPIO.IN)
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setwarnings(False)
+    GPIO.setup(RESET, GPIO.OUT)
+    GPIO.setup(INT, GPIO.IN)
+    
+    # Turn on chip
+    GPIO.output(RESET, True)
 
-    # Initialize MP121 capacitive touch board
-    MPR121.TOU_THRESH = 0x15
-    MPR121.REL_THRESH = 0x12
-    MPR121.setup(MPR121_ADDR)
+    MCP23017 = Adafruit_MCP230XX(address = 0x20, num_gpios = 16)
+    # don't change any pins to outputs
+    # don't enable the pullup resistors
 
     # set polling rate in Hz
-    r = rospy.Rate(4)
-    old_touch_data = 0
+    r = rospy.Rate(100)
     
     while not rospy.is_shutdown():
-        touch_data = MPR121.readData(MPR121_ADDR)
-        touch_data &= 0b111111
+        # If state has changed on INTA line
+        if GPIO.input(INT):
+            if NUM_TOUCH_PADS <= 8:
+                # Adafruit code suggests this reads all of OLATA
+                data = MCP23017.readU8()
+            else:
+                # Adafruit code suggests this reads all of OLATB
+                data = MCP23017.readU16()
 
-        if not touch_data == old_touch_data:
-            sensor_values = [False] * NUM_TOUCH_PADS
+            touch_array = [False] * NUM_TOUCH_PADS
 
             for i in range(NUM_TOUCH_PADS):
                 if touch_data & (1 << i):
-                    sensor_values[i] = True
+                    touch_array[i] = True
 
-            old_touch_data = touch_data
+                # Publish readings to capsense_values topic
+                pub.publish(touch_array)
+                # rospy.loginfo(touch_array)
 
-            # Publish readings to capsense_values topic
-            pub.publish(sensor_values)
-            rospy.loginfo(sensor_values)
-
+        # Prevent this from being a tight loop
         r.sleep()
         
 if __name__ == '__main__':
     try:
-        poller()
+        poll()
     except rospy.ROSInterruptException: pass

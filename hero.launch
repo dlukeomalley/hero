@@ -1,6 +1,6 @@
 <launch>
 	<group ns='motors'>
-		<node name="HEAD" pkg="hero" type="motor_controller.py" output='screen'>
+		<node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[0, 1]</rosparam>
 			<rosparam param='limits'>[0, 1024]</rosparam>
 			<param name='threshold' value='5'/>

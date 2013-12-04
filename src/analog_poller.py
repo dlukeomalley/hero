@@ -15,10 +15,11 @@ ALPHA = .8
 def poll():
     pub = rospy.Publisher('/motors/locations', MotorCoordinate)
     rospy.init_node('analog_poller', anonymous=True)
+    
     # set polling rate in Hz
-    r = rospy.Rate(10)
+    r = rospy.Rate(100)
 
-    pin_map = { 0: "HEAD",
+    pin_map = { 0: "NECK",
                 1: "LARM",
                 2: "RARM",
                 3: "BLINK"}
@@ -27,8 +28,6 @@ def poll():
     voltages = [0]*N_CHANNELS
 
     while not rospy.is_shutdown():
-        # code to read from analog and send out to chip goes here
-
         if DEBUG:
             reading = [0]*8
         else:
