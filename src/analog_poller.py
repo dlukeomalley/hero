@@ -11,17 +11,18 @@ if not DEBUG:
 
 N_CHANNELS = 8
 ALPHA = .8
+THRESHOLD = 1
 
 def poll():
     pub = rospy.Publisher('/motors/locations', MotorCoordinate)
     rospy.init_node('analog_poller', anonymous=True)
     
     # set polling rate in Hz
-    r = rospy.Rate(100)
+    r = rospy.Rate(20)
 
-    pin_map = { 0: "NECK",
-                1: "LARM",
-                2: "RARM",
+    pin_map = { 0: "LARM",
+                1: "RARM",
+                2: "NECK",
                 3: "BLINK"}
 
     old_reading = [0]*N_CHANNELS
@@ -33,14 +34,12 @@ def poll():
         else:
             reading = MCP3008.read_all()
 
-        for i in range(N_CHANNELS):
-            voltages[i] = reading[i]*ALPHA + old_reading[i]*(1-ALPHA)
-        
-        old_readings = voltages
+        voltages = reading
 
+        # rospy.loginfo("AX: {}".format(voltages))
         for i, name in pin_map.iteritems():
             pub.publish(MotorCoordinate(name, voltages[i]))
-        
+
         r.sleep()
         
 if __name__ == '__main__':

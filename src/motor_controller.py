@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-DEBUG=True
+DEBUG=False
 
 if not DEBUG:
     from herolib.external import servo
-
 import roslib; 
 roslib.load_manifest('hero')
 import rospy
@@ -30,6 +29,7 @@ class Motor:
         
         self.goal = 0
         self.position = None
+        self.old_position = 0
         self.stop()
 
     def goal_callback(self, data):
@@ -49,25 +49,42 @@ class Motor:
         if abs(delta) <= self.threshold:
             delta = 0
 
-        #rospy.loginfo("INFO: motor {} moving to {}".format(self.name, self.goal))
-        # Speed must be between -1 and 1
         if DEBUG:
             return
-        servo.setMotorSpeed(self.pos, self.neg, delta/100.0)
+
+        # Speed must be between -1 and 1
+        speed = delta/100.0
+        rospy.loginfo("{}: Delta {} Speed {}".format(self.name, delta, speed))
+        servo.setMotorSpeed(self.pos, self.neg, speed)
 
     def update(self, data):
         if data.name == self.name:
             # remap ADC values to 0-100
+            if data.position > self.high or data.position < self.low:
+                rospy.logwarn("{}: Position outside of limits H:{} and L:{}!".format(self.name, 
+                                                                                     self.high, 
+                                                                                     self.low))
+
             position = 100.0 * (data.position - self.low) / (self.high - self.low)
             self.position = int(position)
 
             #rospy.loginfo("INFO: motor {} @ {}".format(self.name, self.position))
-            self.move_to(self.goal)
 
+            # make sure it's not a small drift
+            if abs(self.position - self.old_position) > 2:
+                rospy.loginfo("{}: {}".format(self.name, self.position))
+                self.old_position = self.position
+                self.move_to(self.goal)
+
+                
     def stop(self):
         rospy.loginfo("INFO: stopping motor {}".format(self.name))
+
         if DEBUG:
             return
+
+        if self.position:
+            self.goal = self.position
         servo.setMotorSpeed(self.pos, self.neg, 0)
 
 if __name__ == '__main__':

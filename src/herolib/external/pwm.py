@@ -2,7 +2,7 @@
 
 import time
 import math
-from Adafruit_I2C import Adafruit_I2C
+from ..thirdparty.Adafruit_I2C import Adafruit_I2C 
 
 # ============================================================================
 # PCA9635 16-Channel PWM IC
@@ -19,7 +19,7 @@ class PWM :
     self.debug = debug
     if (self.debug):
       print "Reseting PCA9685"
-    self.i2c.write8(self.__MODE1, 0x00)
+    self.i2c.write8(self.__MODE1, 0x01)
 
   # def setPWMFreq(self, freq):
   #   oldmode = self.i2c.readU8(self.__MODE1);

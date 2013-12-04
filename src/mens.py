@@ -12,11 +12,6 @@ import os
 
 class Brain():
     def __init__(self):
-        rospy.init_node('brain', anonymous=True)
-        self.pub = rospy.Publisher("/motors/goals", MotorCoordinate)
-        rospy.Subscriber("events", Action, self.callback)
-        rospy.Subscriber("/motors/locations", MotorCoordinate, self.update_location)
-
         self.event_dict = self.load_scripts()
         self.perms_lock = threading.Lock()
         self.shutdown_flags = set()
@@ -38,6 +33,12 @@ class Brain():
                             "LARM" : 0,
                             "RARM" : 0, 
                             "PUR"  : 0, }
+
+        rospy.init_node('brain', anonymous=True)
+        self.pub = rospy.Publisher("/motors/goals", MotorCoordinate)
+        rospy.Subscriber("events", Action, self.callback)
+        rospy.Subscriber("/motors/locations", MotorCoordinate, self.update_location)
+
 
     def callback(self, data):
         event = data.type
@@ -96,8 +97,8 @@ class Brain():
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
         event_to_output = {
-                "BELLY_RUB":[__import__("herolib/moves/move5")],
-                "TEST":[__import__("herolib/moves/move1")]}
+                "BELLY_RUB":[__import__("herolib.moves.move5")],
+                "TEST":[__import__("herolib.moves.move1")]}
 
         # event_to_output = {}
 

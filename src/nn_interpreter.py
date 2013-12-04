@@ -7,13 +7,10 @@ from hero.msg import CapSense, Action
 
 
 # Translation between input and event
-data_set = {(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): None,
-            (1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY_RUB",
-            (0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0): "BELLY_RUB",
-            (0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0): "LARM_GRAB",
-            (0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0): "RARM_GRAB",
-            (0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0): "HEAD_PAT",
-            (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0): "HEAD_PAT"}
+data_set = {(0, 0, 0, 0, 0, 0, 0): None,
+            (1, 0, 0, 0, 0, 0, 0): "LARM_GRAB",
+            (0, 1, 0, 0, 0, 0, 0): "RARM_GRAB",
+            (1, 1, 0, 0, 0, 0, 0): "BOTH_ARM_GRAB",}
 
 class Interpreter():
     def __init__(self):
@@ -33,7 +30,7 @@ class Interpreter():
         # ignore action if action is None
         if action:
             rospy.loginfo("OUTPUT: {}".format(action))
-            self.pub.publish(abstract_action)
+            self.pub.publish(action)
 
     def euclidean_distance(self, s1, s2):
         return sum([(x - y)**2 for x, y in zip(s1, s2)])

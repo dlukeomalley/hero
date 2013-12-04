@@ -121,7 +121,7 @@ class Adafruit_MCP230XX(object):
         elif self.num_gpios > 8 and self.num_gpios <= 16:
             value = self.i2c.readU8(MCP23017_GPIOA)
             value |= self.i2c.readU8(MCP23017_GPIOB) << 8
-        return value & (1 << pin)
+        return value
 
     def readU8(self):
         result = self.i2c.readU8(MCP23008_OLATA)
@@ -190,12 +190,12 @@ if __name__ == '__main__':
     mcp.pullup(0, 1)
 
     # Read input pin and display the results
-    print "Pin 0 = %d" % (mcp.input(0))
 
     # Python speed test on output 0 toggling at max speed
     print "Starting blinky on pin 8 (CTRL+C to quit)"
     while (True):
-      mcp.output(8, 1)  # Pin 0 High
-      time.sleep(1);
-      mcp.output(8, 0)  # Pin 0 Low
-      time.sleep(1);
+        print "Pin 0 = %d" % (mcp.input(0))
+        mcp.output(8, 1)  # Pin 0 High
+        time.sleep(1);
+        mcp.output(8, 0)  # Pin 0 Low
+        time.sleep(1);

@@ -40,7 +40,7 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
 
             commandout <<= 1
 
-        adcout = 0
+        adcout = int(0)
         # read in one empty bit, one null bit and 10 ADC bits
         for i in range(12):
                 GPIO.output(clockpin, True)
