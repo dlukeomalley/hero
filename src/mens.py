@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+CALIBRATE = False
+
 import roslib; roslib.load_manifest('hero')
 
 import rospy
@@ -39,6 +41,14 @@ class Brain():
         rospy.Subscriber("events", Action, self.callback)
         rospy.Subscriber("/motors/locations", MotorCoordinate, self.update_location)
 
+        if CALIBRATE:
+            import pdb
+            kill = False
+            while True:
+                pdb.set_trace()
+                if kill:
+                    sys.exit()
+        
 
     def callback(self, data):
         event = data.type
@@ -96,20 +106,33 @@ class Brain():
 
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
-        event_to_output = {
-                "BELLY_RUB":[__import__("herolib.moves.move5")],
-                "TEST":[__import__("herolib.moves.move1")]}
+        # event_to_output = {
+        #         "BELLY_RUB":[__import__("herolib.moves.move5")],
+        #         "TEST":[__import__("herolib.moves.move1")]}
 
-        # event_to_output = {}
+        event_to_output = {}
 
-        # for fd in os.listdir("herolib/moves"):
-        #     script = __import__("herolib/moves" + fd)
-            
-        #     for e in script.events:
-        #         event_to_output[e].append(script)
+        import pdb
+        pdb.set_trace()            
+ 
+        BASE = "/home/pi/2009red/src/hero/src/"
 
-        # return event_to_output
+        for fd in os.listdir(BASE + "herolib/moves"):
+            if "action_" in fd:
+                fd, end = fd.split(".")
 
+                if "pyc" in end:
+                    continue
+
+                script = __import__("herolib.moves." + fd, fromlist=['foo'])
+
+                for e in script.events:
+                    if e in event_to_output:
+                        event_to_output[e].append(script)
+                    else:
+                        event_to_outpit[e] = [script]
+
+        pdb.set_trace()
         return event_to_output
 
     # Allow ID team to easily write scripts that harness power of randomness
@@ -134,7 +157,13 @@ class Brain():
         for motor, position in kargs.iteritems():
             rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
             self.pub.publish(MotorCoordinate (motor, position))
+    
+    # wait for x seconds
+    @parse_args
+    def wait(duration):
+        rospy.sleep(duration)
         
+    # wait until position reached
     @parse_args
     def wait_until(self, **kargs):
         reached = False

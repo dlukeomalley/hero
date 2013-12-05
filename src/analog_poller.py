@@ -6,6 +6,8 @@ import rospy
 from hero.msg import MotorCoordinate
 
 DEBUG = False
+CALIBRATE = False
+
 if not DEBUG:
     import herolib.thirdparty.Adafruit_MCP3008 as MCP3008
 
@@ -18,7 +20,12 @@ def poll():
     rospy.init_node('analog_poller', anonymous=True)
     
     # set polling rate in Hz
-    r = rospy.Rate(20)
+    if CALIBRATE:
+        rate = 1
+    else:
+        rate = 20
+
+    r = rospy.Rate(rate)
 
     pin_map = { 0: "LARM",
                 1: "RARM",
@@ -36,7 +43,9 @@ def poll():
 
         voltages = reading
 
-        # rospy.loginfo("AX: {}".format(voltages))
+        if CALIBRATE:
+            rospy.loginfo("AX: {}".format(voltages))
+
         for i, name in pin_map.iteritems():
             pub.publish(MotorCoordinate(name, voltages[i]))
 

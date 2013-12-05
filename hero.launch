@@ -1,33 +1,43 @@
 <launch>
-	<!-- group ns='motors'>
-		<node name="RARM" pkg="hero" type="motor_controller.py" output='screen'>
+	<group ns='motors'>
+		<!-- node name="PUR" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[4, 5]</rosparam>
-			<rosparam param='limits'>[470, 1550]</rosparam>
-			<param name='threshold' value='5'/>
-		</node>
-		<node name="LARM" pkg="hero" type="motor_controller.py" output='screen'>
-			<rosparam param='pins'>[2, 3]</rosparam>
-			<rosparam param='limits'>[500, 780]</rosparam>
-			<param name='threshold' value='5'/>
-		</node>
-		<node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
-			<rosparam param='pins'>[0, 1]</rosparam>
-			<rosparam param='limits'>[620, 940]</rosparam>
-			<param name='threshold' value='5'/>
-		</node>
-		<node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
-			<rosparam param='pins'>[6, 7]</rosparam>
 			<rosparam param='limits'>[0, 1024]</rosparam>
 			<param name='threshold' value='5'/>
+			<param name='max_voltage' value='1'/>
+		</node -->
+		<node name="LARM" pkg="hero" type="motor_controller.py" output='screen'>
+			<rosparam param='pins'>[2, 3]</rosparam>
+			<rosparam param='limits'>[670, 890]</rosparam>
+			<param name='threshold' value='5'/>
+			<param name='max_voltage' value='6'/>
+ 		</node>
+		<node name="RARM" pkg="hero" type="motor_controller.py" output='screen'>
+			<rosparam param='pins'>[1, 0]</rosparam>
+			<rosparam param='limits'>[380, 820]</rosparam>
+			<param name='threshold' value='5'/>
+			<param name='max_voltage' value='6'/>
 		</node>
-	</group -->
+		<!--node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
+			<rosparam param='pins'>[6, 7]</rosparam>
+			<rosparam param='limits'>[620, 940]</rosparam>
+			<param name='threshold' value='5'/>
+			<param name='max_voltage' value='3'/>
+		</node>
+		<node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
+			<rosparam param='pins'>[8, 9]</rosparam>
+			<rosparam param='limits'>[0, 1024]</rosparam>
+			<param name='threshold' value='5'/>
+			<param name='max_voltage' value='1'/>
+		</node -->
+	</group>
 
-	<!-- group ns='sensors'>
+	<group ns='sensors'>
 		<node name="analog" pkg="hero" type="analog_poller.py" output='screen'/>
-	</group -->
+	</group>
 
-	<node name="BRAIN" pkg="hero" type="mens.py" output='screen'/>
+	<!-- node name="BRAIN" pkg="hero" type="mens.py" output='screen'/>
 	<node name="INTERPRETER" pkg="hero" type="nn_interpreter.py" />
-	<node name="CAPSENSE" pkg="hero" type="capsense_poller.py" />
+	<node name="CAPSENSE" pkg="hero" type="capsense_poller.py" / -->
 
 </launch>
