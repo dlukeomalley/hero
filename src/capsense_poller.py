@@ -14,7 +14,7 @@ NUM_TOUCH_PADS = 7
 
 def poll():
     # Initialize ROS features
-    pub = rospy.Publisher('capsense_state', CapSense)
+    pub = rospy.Publisher('/capsense_state', CapSense)
     rospy.init_node('capsense_poller', anonymous=True)
 
     # Initialize GPIO Pin numbering and I/O
@@ -50,7 +50,7 @@ def poll():
                     touch_array[i] = True
 
             pub.publish(touch_array)
-            # rospy.loginfo(touch_array)
+            #rospy.loginfo(touch_array)
 
         # Prevent this from being a tight loop
         r.sleep()

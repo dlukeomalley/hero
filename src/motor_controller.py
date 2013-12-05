@@ -15,7 +15,7 @@ class Motor:
     def __init__(self): 
         rospy.init_node("motor_node", anonymous=True)
         rospy.Subscriber("goals", MotorCoordinate, self.goal_callback)
-        rospy.Subscriber("locations", MotorCoordinate, self.update)
+        rospy.Subscriber("locations", MotorCoordinate, self.update, queue_size=1)
         rospy.on_shutdown(self.stop)
 
         self.name = rospy.get_name().split('/')[-1]
@@ -26,7 +26,7 @@ class Motor:
         self.max_voltage = params['max_voltage']
 
         if DEBUG:
-            rospy.loginfo("INFO: motor {} on".format(self.name))
+            rospy.loginfo("INFO: {} motor ON".format(self.name))
         
         self.goal = 50
         self.position = None
@@ -35,7 +35,8 @@ class Motor:
 
     def goal_callback(self, data):
         if data.name == self.name:
-            rospy.loginfo("POS RECV: {}".format(self.name))
+            if DEBUG:
+                rospy.loginfo("POS RECV: {}".format(self.name))
             self.move_to(data.position)
 
     def move_to(self, position):

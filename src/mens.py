@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 CALIBRATE = False
+DEBUG = False
 
 import roslib; roslib.load_manifest('hero')
 
@@ -66,10 +67,12 @@ class Brain():
                     continue
 
                 if script.level >= owner.level:
-                    rospy.loginfo("BRAIN: Permission denied - {}".format(script.name))
+                    if DEBUG:
+                        rospy.loginfo("BRAIN: Permission denied - {}".format(script.name))
                     return
                 else: 
-                    #rospy.loginfo("BRAIN: Adding to shutdown - {}".format(owner.name))
+                    if DEBUG:
+                        rospy.loginfo("BRAIN: Adding to shutdown - {}".format(owner.name))
                     self.shutdown_flags.add(owner)
 
             for owner in self.shutdown_flags:
@@ -83,15 +86,19 @@ class Brain():
             for m in thread.motors:
                 self.ownership_dict[m] = thread
 
-            rospy.loginfo("Launching thread: {}".format(thread.name))
+            if DEBUG:
+                rospy.loginfo("Launching thread: {}".format(thread.name))
             thread.start()
+
 
     def check_perms(self):
         cur_thread = threading.current_thread()
         if cur_thread in self.shutdown_flags:
-            rospy.loginfo("BRAIN: Permissions stolen - {}".format(cur_thread.name))
+            if DEBUG:
+                rospy.loginfo("BRAIN: Permissions stolen - {}".format(cur_thread.name))
             self.shutdown_flags.discard(cur_thread)
             sys.exit()
+
 
     def exit(self):
         with self.perms_lock:
@@ -101,19 +108,14 @@ class Brain():
                 if self.ownership_dict[m] == cur_thread:
                     self.ownership_dict[m] = None
 
-        rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
+        if DEBUG:
+            rospy.loginfo("Exiting from {}".format(threading.current_thread().name))
         sys.exit()
+
 
     # TODO: Have this load all scripts from folder
     def load_scripts(self):
-        # event_to_output = {
-        #         "BELLY_RUB":[__import__("herolib.moves.move5")],
-        #         "TEST":[__import__("herolib.moves.move1")]}
-
         event_to_output = {}
-
-        import pdb
-        pdb.set_trace()            
  
         BASE = "/home/pi/2009red/src/hero/src/"
 
@@ -130,25 +132,30 @@ class Brain():
                     if e in event_to_output:
                         event_to_output[e].append(script)
                     else:
-                        event_to_outpit[e] = [script]
+                        event_to_output[e] = [script]
 
-        pdb.set_trace()
+        if DEBUG:
+            rospy.loginfo(event_to_output)
+
         return event_to_output
+
 
     # Allow ID team to easily write scripts that harness power of randomness
     def parse_args(old_func):
-        def new(**kargs):
+        def new(self, **kargs):
             for motor, position in kargs.iteritems():
                 if type(position) == tuple:
                     a, b = position
                     kargs[motor] = random.randint(a, b)
-
-            return old_func(**kargs)
+            return old_func(self, **kargs)
         return new
+
 
     def update_location(self, data):
         self.locations[data.name] = data.position
-        #rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
+        if DEBUG:
+            rospy.loginfo("BRAIN: Updating {} position to {}".format(data.name, data.position))
+
 
     @parse_args
     def move_to(self, **kargs):
@@ -157,11 +164,13 @@ class Brain():
         for motor, position in kargs.iteritems():
             rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
             self.pub.publish(MotorCoordinate (motor, position))
+
     
     # wait for x seconds
     @parse_args
     def wait(duration):
         rospy.sleep(duration)
+
         
     # wait until position reached
     @parse_args
@@ -181,17 +190,15 @@ class Brain():
             if reached:
                 break
 
+
     @parse_args
     def move_and_wait(self, **kargs):
-        for motor, position in kargs.iteritems():
-            if type(position) == tuple:
-                a, b = position
-                kargs[motor] = random.randint(a, b)
-
         self.move_to(**kargs)
         self.wait_until(**kargs)
 
+
     def play(self, path):
+        # TODO, may have to be absolute path
         os.system('mpg321 {} &'.format(path))
 
 if __name__ == '__main__':
