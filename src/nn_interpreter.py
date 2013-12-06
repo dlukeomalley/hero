@@ -37,6 +37,7 @@ class Interpreter():
 
         # action, val = distances[0]
 
+        action = None
         if sensor in data_set:
             action = data_set[sensor]
 

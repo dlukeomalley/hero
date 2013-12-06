@@ -1,34 +1,34 @@
 <launch>
 	<group ns='motors'>
-		<!-- node name="PUR" pkg="hero" type="motor_controller.py" output='screen'>
+		<node name="PUR" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[4, 5]</rosparam>
 			<rosparam param='limits'>[0, 1024]</rosparam>
 			<param name='threshold' value='5'/>
 			<param name='max_voltage' value='1'/>
-		</node -->
+		</node>
 		<node name="LARM" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[2, 3]</rosparam>
-			<rosparam param='limits'>[670, 890]</rosparam>
+			<rosparam param='limits'>[490, 807]</rosparam>
 			<param name='threshold' value='5'/>
 			<param name='max_voltage' value='6'/>
  		</node>
 		<node name="RARM" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[1, 0]</rosparam>
-			<rosparam param='limits'>[380, 820]</rosparam>
+			<rosparam param='limits'>[430, 830]</rosparam>
 			<param name='threshold' value='5'/>
 			<param name='max_voltage' value='6'/>
 		</node>
-		<!--node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
+		<node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[6, 7]</rosparam>
-			<rosparam param='limits'>[620, 940]</rosparam>
+			<rosparam param='limits'>[765, 1300]</rosparam>
 			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='3'/>
+			<param name='max_voltage' value='6'/>
 		</node>
-		<node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
+		<!--node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[8, 9]</rosparam>
-			<rosparam param='limits'>[0, 1024]</rosparam>
+			<rosparam param='limits'>[500, 960]</rosparam>
 			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='1'/>
+			<param name='max_voltage' value='5'/>
 		</node -->
 	</group>
 
@@ -39,5 +39,6 @@
 
 	<node name="BRAIN" pkg="hero" type="mens.py" output='screen'/>
 	<node name="INTERPRETER" pkg="hero" type="nn_interpreter.py" output='screen'/>
+	<!--node name="BLINK_GEN" pkg="hero" type="blink_generator.py" output='screen' /-->
 
 </launch>

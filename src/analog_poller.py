@@ -23,14 +23,14 @@ def poll():
     if CALIBRATE:
         rate = 1
     else:
-        rate = 20
+        rate = 100
 
     r = rospy.Rate(rate)
 
     pin_map = { 0: "LARM",
                 1: "RARM",
                 2: "NECK",
-                3: "BLINK"}
+                7: "BLINK"}
 
     old_reading = [0]*N_CHANNELS
     voltages = [0]*N_CHANNELS

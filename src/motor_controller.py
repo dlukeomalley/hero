@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-DEBUG = False
+DEBUG = True
 
 from herolib.external import servo
 import roslib; 
