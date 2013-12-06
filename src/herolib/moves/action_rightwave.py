@@ -18,8 +18,8 @@ name = "Right Wave"
 def run(parent):
 	try:
 		# YOUR CODE GOES HERE
-		parent.move_and_wait(RARM=(70,90)
-		parent.move_and_wait(RARM=(10,30)
+		parent.move_and_wait(RARM=(70,90))
+		parent.move_and_wait(RARM=(10,30))
 		# YOUR CODE ENDS HERE
 
 	finally:

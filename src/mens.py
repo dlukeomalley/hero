@@ -134,8 +134,8 @@ class Brain():
                     else:
                         event_to_output[e] = [script]
 
-        if DEBUG:
-            rospy.loginfo(event_to_output)
+        for k, a in event_to_output.iteritems():
+            rospy.loginfo('{}: {}'.format(k, [x.name for x in a]))
 
         return event_to_output
 

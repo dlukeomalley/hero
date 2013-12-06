@@ -18,8 +18,8 @@ name = "Left Wave"
 def run(parent):
 	try:
 		# YOUR CODE GOES HERE
-		parent.move_and_wait(LARM=(70,90)
-		parent.move_and_wait(LARM=(10,30)
+		parent.move_and_wait(LARM=(70,90))
+		parent.move_and_wait(LARM=(10,30))
 		# YOUR CODE ENDS HERE
 
 	finally:

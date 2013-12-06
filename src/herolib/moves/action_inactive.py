@@ -1,5 +1,3 @@
-#Resting Awake - Ollie hasn’t moved in XX minutes
-
 # Use only the motors you need.
 # Valid motors are BLINK, NECK, LARM, RARM, PUR.
 motors = [	"LARM",

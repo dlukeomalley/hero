@@ -18,8 +18,7 @@ name = "Interaction_2"
 def run(parent):
 	try:
 		# YOUR CODE GOES HERE
-		parent.move_to(BLINK=(50,75) ,PUR=80) 
-		#parent.play(‘soothingsound.mp3’)
+		parent.move_to(BLINK=(50,75), PUR=80) 
 		
 		for x in range(random.randint(1, 4)):
 			parent.move_and_wait(NECK=(0,10))
