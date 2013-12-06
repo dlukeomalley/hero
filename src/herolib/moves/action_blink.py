@@ -4,11 +4,11 @@ motors = [  "BLINK" ]
 
 # Associate this movement with events.
 # Valid events are BELLY_RUB, LARM_GRAB, RARM_GRAB, HEAD_PAT
-events = [  "BLINK"  ]# UPPER BELLY BELLY_RUB would have a lower chance 
+events = [  "BLINK"  ]
 
 # The lower the level, the more important this script is.
 # Recommended to use 0, 10, 20, 30, 40...
-level = 4
+level = 1000
 
 # Human readable name for debugging purposes.
 name = "Blinking"

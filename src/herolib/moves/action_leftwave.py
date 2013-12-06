@@ -1,27 +1,27 @@
+# Otter moves arms, makes sound, and blinks
+
 # Use only the motors you need.
 # Valid motors are BLINK, NECK, LARM, RARM, PUR.
-motors = [	"LARM",
-		"RARM",  ]
+motors = [	"LARM"	]
 
 # Associate this movement with events.
-# Valid events are BELLY_RUB, LARM_GRAB, RARM_GRAB, HEAD_PAT, BOTH_ARM_GRAB
-events = [ 	"LARM_GRAB",
-		"RARM_GRAB",    ]
+# Valid events are BELLY_RUB, LARM_GRAB, RARM_GRAB, HEAD_PAT
+events = [ 	"LARM_GRAB" ]
 
 # The lower the level, the more important this script is.
 # Recommended to use 0, 10, 20, 30, 40...
-level = 10
+level = 4
 
 # Human readable name for debugging purposes.
-name = "High Level Test - 1"
+name = "Left Wave"
 
 def run(parent):
-#	try:
+	try:
 		# YOUR CODE GOES HERE
-		
-	parent.move_and_wait(LARM=50, RARM=50, BLINK=25, NECK=95)
+		parent.move_and_wait(LARM=(70,90)
+		parent.move_and_wait(LARM=(10,30)
 		# YOUR CODE ENDS HERE
 
-#	finally:
+	finally:
 		# DO NOT MODIFY THIS CODE
-#		parent.exit()
+		parent.exit()

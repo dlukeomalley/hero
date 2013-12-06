@@ -8,7 +8,7 @@ from hero.msg import CapSense, Action
 DEBUG = False
 
 # Translation between input and event
-data_set = {(0, 0, 0, 0, 0, 0, 0): None,
+data_set = {(0, 0, 0, 0, 0, 0, 0): "INACTIVE",
             (1, 0, 0, 0, 0, 0, 0): "LARM_GRAB",
             (0, 1, 0, 0, 0, 0, 0): "RARM_GRAB",
             (1, 1, 0, 0, 0, 0, 0): "BOTH_ARM_GRAB",

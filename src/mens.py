@@ -167,8 +167,11 @@ class Brain():
 
     
     # wait for x seconds
-    @parse_args
     def wait(duration):
+        if type(duration) == tuple:
+            a, b = duration
+            duration = random.uniform(a, b)
+        
         rospy.sleep(duration)
 
         
@@ -195,6 +198,10 @@ class Brain():
     def move_and_wait(self, **kargs):
         self.move_to(**kargs)
         self.wait_until(**kargs)
+
+    def stop_with_probability(p):
+        if random.random() > p:
+            sys.exit()
 
 
     def play(self, path):
