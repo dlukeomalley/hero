@@ -26,7 +26,7 @@ def run(parent):
 			parent.move_and_wait(NECK=(90,100))
 			parent.wait((.75, 1.5))
 
-		parent.move_to(NECK=50)
+		parent.move_to(NECK=50, PUR=0)
 		# YOUR CODE ENDS HERE
 
 	finally:

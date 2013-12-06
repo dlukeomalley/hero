@@ -25,11 +25,11 @@ class Brain():
                                 "RARM" : None, 
                                 "PUR"  : None}
 
-        self.threshold = {  "BLINK": 5,
-                            "NECK" : 5,
-                            "LARM" : 5,
-                            "RARM" : 5, 
-                            "PUR"  : 5, }
+        self.threshold = {  "BLINK": 20,
+                            "NECK" : 20,
+                            "LARM" : 20,
+                            "RARM" : 20, 
+                            "PUR"  : 20, }
 
         self.locations = {  "BLINK": 0,
                             "NECK" : 0,
@@ -184,6 +184,8 @@ class Brain():
             reached = True
     
             self.check_perms()
+
+            rospy.loginfo("Entering Wait")
             for motor, position in kargs.iteritems():
                 if abs(self.locations[motor] - position) > self.threshold[motor]:
                     rospy.sleep(.1)
@@ -193,6 +195,7 @@ class Brain():
             if reached:
                 break
 
+        rospy.loginfo("Exiting Wait")
 
     @parse_args
     def move_and_wait(self, **kargs):

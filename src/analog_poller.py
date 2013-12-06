@@ -30,7 +30,8 @@ def poll():
     pin_map = { 0: "LARM",
                 1: "RARM",
                 2: "NECK",
-                7: "BLINK"}
+                7: "BLINK",
+                3: 'PUR'}
 
     old_reading = [0]*N_CHANNELS
     voltages = [0]*N_CHANNELS
@@ -47,6 +48,8 @@ def poll():
             rospy.loginfo("AX: {}".format(voltages))
 
         for i, name in pin_map.iteritems():
+            if name == 'PUR':
+                voltages[i] = 0
             pub.publish(MotorCoordinate(name, voltages[i]))
 
         r.sleep()

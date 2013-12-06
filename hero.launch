@@ -4,32 +4,33 @@
 			<rosparam param='pins'>[4, 5]</rosparam>
 			<rosparam param='limits'>[0, 1024]</rosparam>
 			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='1'/>
+			<rosparam param='voltages'>[1.5, 1.5]</rosparam>
+
 		</node>
 		<node name="LARM" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[2, 3]</rosparam>
-			<rosparam param='limits'>[490, 807]</rosparam>
-			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='6'/>
+			<rosparam param='limits'>[430, 800]</rosparam>
+			<param name='threshold' value='15'/>
+			<rosparam param='voltages'>[2.5, 5]</rosparam>
  		</node>
 		<node name="RARM" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[1, 0]</rosparam>
 			<rosparam param='limits'>[430, 830]</rosparam>
-			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='6'/>
+			<param name='threshold' value='15'/>
+			<rosparam param='voltages'>[2.5, 5]</rosparam>
 		</node>
-		<node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
+		<!--node name="NECK" pkg="hero" type="motor_controller.py" output='screen'>
 			<rosparam param='pins'>[6, 7]</rosparam>
 			<rosparam param='limits'>[765, 1300]</rosparam>
-			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='6'/>
-		</node>
-		<!--node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
-			<rosparam param='pins'>[8, 9]</rosparam>
-			<rosparam param='limits'>[500, 960]</rosparam>
-			<param name='threshold' value='5'/>
-			<param name='max_voltage' value='5'/>
+			<param name='threshold' value='15'/>
+			<rosparam param='voltages'>[0.25, 1]</rosparam>
 		</node -->
+		<node name="BLINK" pkg="hero" type="motor_controller.py" output='screen'>
+			<rosparam param='pins'>[8, 9]</rosparam>
+			<rosparam param='limits'>[480, 950]</rosparam>
+			<param name='threshold' value='15'/>
+			<rosparam param='voltages'>[1.75, 2]</rosparam>
+		</node>
 	</group>
 
 	<group ns='sensors'>
@@ -37,8 +38,9 @@
 		<node name="CAPSENSE" pkg="hero" type="capsense_poller.py" />
 	</group>
 
+	<!--node name='test' pkg='hero' type='test_node.py' output='screen' / -->
 	<node name="BRAIN" pkg="hero" type="mens.py" output='screen'/>
-	<node name="INTERPRETER" pkg="hero" type="nn_interpreter.py" output='screen'/>
-	<!--node name="BLINK_GEN" pkg="hero" type="blink_generator.py" output='screen' /-->
+	<!--node name="INTERPRETER" pkg="hero" type="nn_interpreter.py" output='screen'/ -->
+	<node name="BLINK_GEN" pkg="hero" type="blink_generator.py" output='screen' />
 
 </launch>

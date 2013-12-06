@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-DEBUG = True
+DEBUG = False
 
 from herolib.external import servo
 import roslib; 
@@ -23,7 +23,7 @@ class Motor:
         self.pos, self.neg = params['pins']
         self.low, self.high = params['limits']
         self.threshold = params['threshold']
-        self.max_voltage = params['max_voltage']
+        self.min_voltage, self.max_voltage = params['voltages']
 
         if DEBUG:
             rospy.loginfo("INFO: {} motor ON".format(self.name))
@@ -35,8 +35,7 @@ class Motor:
 
     def goal_callback(self, data):
         if data.name == self.name:
-            if DEBUG:
-                rospy.loginfo("POS RECV: {}".format(self.name))
+            rospy.loginfo("POS RECV: {}".format(self.name))
             self.move_to(data.position)
 
     def move_to(self, position):
@@ -54,6 +53,16 @@ class Motor:
         # Speed must be between -1 and 1
         # Scale for battery input voltage of 7.4V
         speed = (self.max_voltage/7.4) * (delta/100.0)
+        
+        direction = 1
+        if speed < 0:
+            direction = -1
+
+        if abs(speed) > 0:
+            if abs(speed) < (self.min_voltage/7.4):
+                speed = self.min_voltage/7.4
+                speed *= direction
+
         if DEBUG:
             rospy.loginfo("{}: Delta {} Speed {}".format(self.name, delta, speed))
 

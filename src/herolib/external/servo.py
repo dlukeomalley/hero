@@ -29,5 +29,7 @@ def setMotorSpeed(pos, neg, speed):
     else:
         neg_speed = int(-speed*0xFF)
 
+#    print pos_speed, neg_speed
+
     pwm.write8(LED0 + pos, pos_speed)
     pwm.write8(LED0 + neg, neg_speed)
