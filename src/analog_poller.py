@@ -23,7 +23,7 @@ def poll():
     if CALIBRATE:
         rate = 1
     else:
-        rate = 100
+        rate = 200
 
     r = rospy.Rate(rate)
 

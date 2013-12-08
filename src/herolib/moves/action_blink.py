@@ -14,17 +14,17 @@ level = 1000
 name = "Blinking"
 
 def run(parent):
-#	try:
+	try:
 		# YOUR CODE GOES HERE
-	parent.move_and_wait(BLINK=95)
-	parent.move_and_wait(BLINK=5)
+		parent.move_and_wait(BLINK=95)
+		parent.move_and_wait(BLINK=5)
 
-	parent.stop_with_probability(.5)
+		parent.stop_with_probability(.5)
 
-	parent.move_and_wait(BLINK=95)
-	parent.move_to(BLINK=5)
+		parent.move_and_wait(BLINK=95)
+		parent.move_to(BLINK=5)
 		# YOUR CODE ENDS HERE
 
-#	finally:
+	finally:
 		# DO NOT MODIFY THIS CODE
-	parent.exit()
+		parent.exit()

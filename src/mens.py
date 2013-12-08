@@ -12,6 +12,7 @@ import random
 import threading
 import sys
 import os
+import re
 
 class Brain():
     def __init__(self):
@@ -120,11 +121,8 @@ class Brain():
         BASE = "/home/pi/2009red/src/hero/src/"
 
         for fd in os.listdir(BASE + "herolib/moves"):
-            if "action_" in fd:
+            if re.search("^action_.*(.py)$", fd):
                 fd, end = fd.split(".")
-
-                if "pyc" in end:
-                    continue
 
                 script = __import__("herolib.moves." + fd, fromlist=['foo'])
 
@@ -162,12 +160,13 @@ class Brain():
         self.check_perms()
 
         for motor, position in kargs.iteritems():
-            rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
+            if DEBUG:
+                rospy.loginfo("BRAIN: Move {} to {}".format(motor, position))
             self.pub.publish(MotorCoordinate (motor, position))
 
     
     # wait for x seconds
-    def wait(duration):
+    def wait(self, duration):
         if type(duration) == tuple:
             a, b = duration
             duration = random.uniform(a, b)
@@ -178,31 +177,14 @@ class Brain():
     # wait until position reached
     @parse_args
     def wait_until(self, **kargs):
-        reached = False
-
-        while True:
-            reached = True
-    
-            self.check_perms()
-
-            rospy.loginfo("Entering Wait")
-            for motor, position in kargs.iteritems():
-                if abs(self.locations[motor] - position) > self.threshold[motor]:
-                    rospy.sleep(.1)
-                    reached = False
-                    break
-
-            if reached:
-                break
-
-        rospy.loginfo("Exiting Wait")
+        rospy.sleep(1)
 
     @parse_args
     def move_and_wait(self, **kargs):
         self.move_to(**kargs)
         self.wait_until(**kargs)
 
-    def stop_with_probability(p):
+    def stop_with_probability(self, p):
         if random.random() > p:
             sys.exit()
 

@@ -11,21 +11,21 @@ from herolib.thirdparty.Adafruit_MCP230XX import Adafruit_MCP230XX
 RESET = 16
 INT = None
 NUM_TOUCH_PADS = 7
+CALIBRATE = False
 
 def poll():
     # Initialize ROS features
     pub = rospy.Publisher('/capsense_state', CapSense)
     rospy.init_node('capsense_poller', anonymous=True)
-
+    
     # Initialize GPIO Pin numbering and I/O
     GPIO.setmode(GPIO.BOARD)
     GPIO.setwarnings(False)
-    GPIO.setup(RESET, GPIO.OUT)
-    #GPIO.setup(INT, GPIO.IN)
-    
+    GPIO.setup(RESET, GPIO.OUT)        
+        
     # Turn on chip
     GPIO.output(RESET, False)
-    rospy.sleep(.10)
+    rospy.sleep(.25)
     GPIO.output(RESET, True)
 
     MCP23017 = Adafruit_MCP230XX(address=0x20, num_gpios=16)
@@ -33,12 +33,17 @@ def poll():
     # don't enable the pullup resistors
 
     # set polling rate in Hz
-    r = rospy.Rate(10)
+    if CALIBRATE:
+        rate = 1
+    else:
+        rate = 10
+
+    r = rospy.Rate(rate)
 
     old_data = 0
     
     while not rospy.is_shutdown():
-        data = MCP23017.input(1)
+        data = MCP23017.input(0)
 
         if data != old_data:
             old_data = data
@@ -49,8 +54,10 @@ def poll():
                 if data & (1 << i):
                     touch_array[i] = True
 
-            pub.publish(touch_array)
-            #rospy.loginfo(touch_array)
+            if CALIBRATE:
+                rospy.loginfo(touch_array)
+            else:
+                pub.publish(touch_array)
 
         # Prevent this from being a tight loop
         r.sleep()

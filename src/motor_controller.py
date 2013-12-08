@@ -35,7 +35,8 @@ class Motor:
 
     def goal_callback(self, data):
         if data.name == self.name:
-            rospy.loginfo("POS RECV: {}".format(self.name))
+            if DEBUG:
+                rospy.loginfo("POS RECV: {}".format(self.name))
             self.move_to(data.position)
 
     def move_to(self, position):
